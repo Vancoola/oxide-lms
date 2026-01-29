@@ -1,0 +1,6 @@
+[package]
+name = "oxide-business"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
