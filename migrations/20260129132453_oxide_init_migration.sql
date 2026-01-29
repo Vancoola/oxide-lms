@@ -14,5 +14,8 @@ create table if not exists course(
     id uuid primary key default gen_random_uuid(),
     name text not null,
     description text not null,
-    status course_status default 'draft'
+    status course_status default 'draft',
+    started_at timestamptz,
+    ended_at timestamptz
 );
+
