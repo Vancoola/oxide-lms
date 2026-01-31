@@ -32,13 +32,13 @@ fn AuthHeader() -> impl IntoView {
                         <a href="/" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                             Мое обучение
                         </a>
-                        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                            Фак
+                        <a href="/courses" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                            Курсы
                         </a>
-                        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                        <a href="/schedule" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                             Расписание
                         </a>
-                        <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                        <a href="/news" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                             Новости
                         </a>
                         <a href="/dean-online" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
@@ -60,7 +60,7 @@ fn AuthHeader() -> impl IntoView {
                                     Иван Иванов
                                 </div>
                                 <div class="text-xs text-gray-500">
-                                    Группа: ИСП-204
+                                    "Группа: ИСП-204"
                                 </div>
                             </div>
 

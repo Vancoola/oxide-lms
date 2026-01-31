@@ -187,7 +187,7 @@ pub fn Profile() -> impl IntoView{
 
                                 <div class="space-y-1">
                                     <p class="text-sm text-gray-500">Следующая сессия</p>
-                                    <p class="text-lg font-medium text-gray-900">Зимняя 2024</p>
+                                    <p class="text-lg font-medium text-gray-900">Зимняя 2026</p>
                                 </div>
                             </div>
 

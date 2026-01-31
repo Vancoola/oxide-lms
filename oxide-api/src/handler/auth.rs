@@ -1,5 +1,6 @@
-use actix_web::{post, web, HttpResponse, Responder};
-use validator::Validate;
+use axum::http::StatusCode;
+use axum::Json;
+use axum::response::IntoResponse;
 use crate::dto::auth::LoginRequest;
 
 #[utoipa::path(
@@ -11,12 +12,6 @@ use crate::dto::auth::LoginRequest;
     description = "Logs in a user by verifying credentials and returns an access token. \
                  Requires valid email and password."
 )]
-#[post("/login")]
-pub async fn login(body: web::Json<LoginRequest>) -> impl Responder {
-
-    if let Err(e) = body.validate() {
-        return HttpResponse::BadRequest().json(e);
-    }
-
-    HttpResponse::Ok().json("")
+pub async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
+    (StatusCode::OK, Json(""))
 }

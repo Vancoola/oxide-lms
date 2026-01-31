@@ -19,11 +19,20 @@ serde = {version = "1.0.228", features = ["derive"]}
 validator = { version = "0.20.0", features = ["derive"] }
 uuid = {version = "1.20.0", features = ["v4", "serde"]}
 sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid", "time"]}
-time = "0.3.46"
+time = {version = "0.3.46", features = ["serde"]}
 thiserror = "2.0.18"
 jsonwebtoken = "10.3.0"
+
+
+axum = "0.8.8"
+tower = "0.5.3"
+tower-http = {version = "0.6.8", features = ["cors"]}
+
+
 actix-web = "4.12.1"
 actix-cors = "0.7.1"
 actix-web-httpauth = "0.8.2"
-utoipa = { version = "5.4.0", features = ["actix_extras", "uuid"] }
-utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web"] }
+
+
+utoipa = { version = "5.4.0", features = ["axum_extras", "uuid"] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }

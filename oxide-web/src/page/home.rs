@@ -29,7 +29,7 @@ pub fn Home() -> impl IntoView {
                             </div>
                         </div>
                         <div class="text-sm text-gray-500">
-                            Активная сессия: Весенняя 2024
+                            Активная сессия: Весенняя 2026
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@ pub fn Home() -> impl IntoView {
                                                 <div>
                                                     <h3 class="text-xl font-bold text-gray-900">Базы данных</h3>
                                                     <div class="flex items-center gap-2 mt-1">
-                                                        <span class="text-gray-600">Преподаватель:</span>
+                                                        <span class="text-gray-600">"Преподаватель:"</span>
                                                         <span class="font-medium text-gray-900">Иванов А.П.</span>
                                                         <span class="ml-4 inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
                                                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -196,7 +196,7 @@ pub fn Home() -> impl IntoView {
                                                 <div>
                                                     <h3 class="text-xl font-bold text-gray-900">Веб-разработка</h3>
                                                     <div class="flex items-center gap-2 mt-1">
-                                                        <span class="text-gray-600">Преподаватель:</span>
+                                                        <span class="text-gray-600">"Преподаватель:"</span>
                                                         <span class="font-medium text-gray-900">Петрова С.М.</span>
                                                     </div>
                                                 </div>
@@ -357,7 +357,7 @@ pub fn Home() -> impl IntoView {
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <div class="w-3 h-3 bg-blue-500 rounded"></div>
-                                            <span>В процессе</span>
+                                            <span>"В процессе"</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <div class="w-3 h-3 bg-gray-300 rounded"></div>
