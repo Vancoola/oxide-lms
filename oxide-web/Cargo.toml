@@ -6,3 +6,5 @@ edition.workspace = true
 [dependencies]
 leptos.workspace = true
 leptos_router.workspace = true
+reqwasm.workspace = true
+serde.workspace = true

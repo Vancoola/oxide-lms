@@ -43,7 +43,7 @@ pub struct AcademicGroup {
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::Type)]
-#[sqlx(type_name = "training_status", rename_all = "lowercase")]
+#[sqlx(type_name = "training_status", rename_all = "snake_case")]
 pub enum TrainingStatus {
     Applicant,          // Абитуриент
     Enrolled,           // Зачислен (но еще не начал учебу)

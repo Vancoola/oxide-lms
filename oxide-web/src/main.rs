@@ -7,6 +7,5 @@ mod component;
 mod page;
 
 fn main() {
-    println!("Hi, Axion!");
     mount_to_body(|| view! {<AppRouter />})
 }

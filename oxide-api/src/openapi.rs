@@ -1,5 +1,7 @@
-use utoipa::OpenApi;
+use utoipa::{Modify, OpenApi};
+use utoipa::openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme};
 use crate::handler::auth::{__path_login};
+use crate::handler::user::{__path_me};
 use crate::dto::auth::{LoginRequest};
 
 #[derive(OpenApi)]
@@ -10,7 +12,8 @@ use crate::dto::auth::{LoginRequest};
         (url = "https://staging.axion-tech.ru", description = "Стейджнг сервер"),
     ),
     paths(
-        login
+        login,
+        me
     ),
     components(
         schemas(LoginRequest),
@@ -32,6 +35,27 @@ use crate::dto::auth::{LoginRequest};
             name="Поддержка",
             email="support@axion-tech.ru"
         )
-    )
+    ),
+    modifiers(&SecurityAddon)
 )]
 pub struct ApiDoc;
+
+struct SecurityAddon;
+
+impl Modify for SecurityAddon {
+    fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
+        openapi.components = Some(
+            utoipa::openapi::ComponentsBuilder::new()
+                .security_scheme(
+                    "api_jwt_token",
+                    SecurityScheme::Http(
+                        HttpBuilder::new()
+                            .scheme(HttpAuthScheme::Bearer)
+                            .bearer_format("JWT")
+                            .build(),
+                    ),
+                )
+                .build(),
+        )
+    }
+}

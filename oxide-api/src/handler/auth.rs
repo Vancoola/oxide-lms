@@ -1,6 +1,7 @@
 use axum::http::StatusCode;
 use axum::Json;
 use axum::response::IntoResponse;
+use oxide_data::dto::JwtToken;
 use crate::dto::auth::LoginRequest;
 
 #[utoipa::path(
@@ -13,5 +14,5 @@ use crate::dto::auth::LoginRequest;
                  Requires valid email and password."
 )]
 pub async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
-    (StatusCode::OK, Json(""))
+    (StatusCode::OK, Json(JwtToken{token: "access".to_string()}))
 }

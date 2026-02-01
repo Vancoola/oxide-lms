@@ -6,6 +6,7 @@ use crate::dto::JwtToken;
 use crate::error::DataError;
 use crate::repository::PostgresContext;
 
+#[derive(Clone)]
 pub struct UserManager {
     context: PostgresContext,
 }
@@ -20,6 +21,16 @@ impl UserManager{
         let secret = "your-super-secret-key";
         let token = generate_jwt(&user_model.id, secret)?;
         self.context.create_user(user_model).await?;
+        Ok(JwtToken { token })
+    }
+
+    pub async fn login_user(&self, email: &str, password: &str) -> Result<JwtToken, DataError> {
+        let (id, password) = self.context.get_password_by_email(email).await?;
+        if password != password {
+            return Err(DataError::InvalidPassword)
+        }
+        let secret = "your-super-secret-key";
+        let token = generate_jwt(&id, secret)?;
         Ok(JwtToken { token })
     }
 

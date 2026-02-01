@@ -4,3 +4,8 @@ use serde::{Deserialize, Serialize};
 pub struct JwtToken {
     pub token: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AuthResponse {
+
+}

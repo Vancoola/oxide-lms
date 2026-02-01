@@ -7,4 +7,6 @@ pub enum DataError {
     Sqlx(#[from] sqlx::Error),
     #[error("business error: {0}")]
     Business(#[from] BusinessError),
+    #[error("invalid password")]
+    InvalidPassword,
 }

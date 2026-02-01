@@ -3,6 +3,7 @@ use oxide_domain::dto::{CreateUser, PublicUser, UserDbRow};
 use oxide_domain::model::User;
 use crate::error::DataError;
 
+#[derive(Clone)]
 pub struct PostgresContext {
     pool: sqlx::PgPool,
 }
@@ -40,6 +41,13 @@ impl PostgresContext {
             .execute(&self.pool)
             .await?;
         Ok(())
+    }
+
+    pub async fn get_password_by_email(&self, email: &str) -> Result<(Uuid, String), DataError> {
+        let record = sqlx::query!("SELECT id, password FROM users WHERE email = $1", &email)
+            .fetch_one(&self.pool)
+            .await?;
+        Ok((record.id, record.password))
     }
 
 }

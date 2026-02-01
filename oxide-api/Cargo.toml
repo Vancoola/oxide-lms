@@ -19,3 +19,6 @@ serde.workspace = true
 validator.workspace = true
 utoipa.workspace = true
 utoipa-swagger-ui.workspace = true
+
+oxide-data = {path="../oxide-data"}
+uuid = { version = "1.20.0", features = ["v4"] }
