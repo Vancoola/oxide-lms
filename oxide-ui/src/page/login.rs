@@ -1,39 +1,43 @@
 use leptos::prelude::*;
-use leptos_router::hooks::use_navigate;
+use leptos_i18n::{t, t_string};
+use oxide_i18n::oxide_i18n::i18n::use_i18n;
 
 #[component]
 pub fn Login() -> impl IntoView {
+
+    let i18n = use_i18n();
+
     view! {
     <div class="flex flex-col items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mb-8">
 
             <div class="text-center mb-8">
                 <a href="/" class="text-3xl font-bold font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">
-                    Университет
+                    {move || t!(i18n, brand_title)}
                 </a>
             </div>
 
             <div class="space-y-6">
                 <div>
                     <label for="login" class="block text-sm font-medium text-gray-700 mb-2">
-                        Логин
+                        {move || t!(i18n, username)}
                     </label>
                     <input
                         type="text"
                         id="login"
-                        placeholder="Введите ваш логин"
+                        placeholder=move || t_string!(i18n, login_placeholder)
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     />
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Пароль
+                        {move || t!(i18n, password)}
                     </label>
                     <input
                         type="password"
                         id="password"
-                        placeholder="Введите ваш пароль"
+                        placeholder=move || t_string!(i18n, password_placeholder)
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     />
                 </div>
@@ -45,20 +49,20 @@ pub fn Login() -> impl IntoView {
                         class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
                     />
                     <label for="remember" class="ml-2 text-sm text-gray-700">
-                        Запомнить меня
+                        {move || t!(i18n, remember_me)}
                     </label>
                 </div>
 
                 <div>
                     <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
-                        Войти
+                        {move || t!(i18n, login_btn)}
                     </button>
                 </div>
             </div>
 
             <div class="text-center mt-6">
                 <a href="#" class="text-sm text-blue-600 hover:text-blue-800">
-                    Забыли пароль?
+                    {move || t!(i18n, forgot_password)}
                 </a>
             </div>
         </div>
@@ -66,10 +70,10 @@ pub fn Login() -> impl IntoView {
         <div class="text-center text-gray-500 text-sm">
                 <p class="mb-1">
                     <a href="/policy" class="text-gray-600 hover:text-gray-800 hover:underline">
-                        Пользовательское соглашение
+                        {move || t!(i18n, user_agreement)}
                     </a>
                 </p>
-                <p>"© 2026 AxionTech. Все права защищены."</p>
+                <p>{move || t!(i18n, copyright)}</p>
             </div>
         </div>
     </div>

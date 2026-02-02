@@ -1,0 +1,13 @@
+[package]
+name = "oxide-i18n"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos_i18n.workspace = true
+
+[build-dependencies]
+leptos_i18n_build.workspace = true

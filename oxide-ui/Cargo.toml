@@ -1,18 +1,16 @@
 [package]
-name = "oxide-web"
+name = "oxide-ui"
 version.workspace = true
 edition.workspace = true
+authors.workspace = true
+license.workspace = true
 
 [dependencies]
 leptos.workspace = true
-leptos_router.workspace = true
 leptos_i18n.workspace = true
-leptos_meta.workspace = true
-reqwasm.workspace = true
-serde.workspace = true
+leptos_router.workspace = true
 
 oxide-web-common = {path = "../oxide-web-common"}
-oxide-ui = {path="../oxide-ui"}
 oxide-i18n = {path = "../oxide-i18n"}
 
 [build-dependencies]

@@ -1,7 +1,15 @@
 use leptos::prelude::*;
+use leptos_i18n::{t, t_string};
+use oxide_i18n::oxide_i18n::i18n::use_i18n;
+use oxide_web_common::auth::AuthContext;
 
 #[component]
 pub fn Home() -> impl IntoView {
+
+    let i18n = use_i18n();
+
+    let auth = use_context::<AuthContext>().expect("Home должен быть представлен AuthProvider");
+
     view! {
         <div class="min-h-screen">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -9,10 +17,10 @@ pub fn Home() -> impl IntoView {
                 <div class="mb-8">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">Мое обучение</h1>
+                            <h1 class="text-3xl font-bold text-gray-900">{move || t!(i18n, my_training)}</h1>
                             <div class="mt-2">
                                 <p class="text-xl font-semibold text-gray-700">
-                                    "Доброе утро, Иван! 👋"
+                                    {move || t!(i18n, good_morning)}" "{move || auth.user.get().first_name}"! 👋"
                                 </p>
                                 <p class="text-gray-600 mt-1">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -29,7 +37,7 @@ pub fn Home() -> impl IntoView {
                             </div>
                         </div>
                         <div class="text-sm text-gray-500">
-                            Активная сессия: Весенняя 2026
+                            {move || t!(i18n, active_session)}: Весенняя 2026
                         </div>
                     </div>
                 </div>
@@ -39,12 +47,12 @@ pub fn Home() -> impl IntoView {
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                                <h2 class="text-xl font-bold text-gray-900">Быстрый доступ</h2>
+                                <h2 class="text-xl font-bold text-gray-900">{move || t!(i18n, quick_access)}</h2>
 
                                 <div class="relative w-full md:w-64">
                                     <input
                                         type="text"
-                                        placeholder="Поиск по курсам и материалам..."
+                                        placeholder=move || t_string!(i18n, search_placeholder)
                                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
                                     <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +68,7 @@ pub fn Home() -> impl IntoView {
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <span class="font-medium text-gray-900 text-center">Продолжить обучение</span>
+                                    <span class="font-medium text-gray-900 text-center">{move || t!(i18n, continue_learning)}</span>
                                 </a>
 
                                 <a href="#" class="flex flex-col items-center justify-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition border border-green-100">
@@ -69,7 +77,7 @@ pub fn Home() -> impl IntoView {
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <span class="font-medium text-gray-900 text-center">Сдать работу</span>
+                                    <span class="font-medium text-gray-900 text-center">{move || t!(i18n, submit_assignment)}</span>
                                 </a>
 
                                 <a href="#" class="flex flex-col items-center justify-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition border border-purple-100">
@@ -78,7 +86,7 @@ pub fn Home() -> impl IntoView {
                                             <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <span class="font-medium text-gray-900 text-center">Задать вопрос</span>
+                                    <span class="font-medium text-gray-900 text-center">{move || t!(i18n, ask_question)}</span>
                                 </a>
 
                                 <a href="#" class="flex flex-col items-center justify-center p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition border border-amber-100">
@@ -87,15 +95,15 @@ pub fn Home() -> impl IntoView {
                                             <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <span class="font-medium text-gray-900 text-center">Записаться на курс</span>
+                                    <span class="font-medium text-gray-900 text-center">{move || t!(i18n, sith_up_for_course)}</span>
                                 </a>
                             </div>
                         </div>
 
                         <div>
                             <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900">Текущие курсы</h2>
-                                <span class="text-sm font-medium text-gray-600">4 курса активны</span>
+                                <h2 class="text-2xl font-bold text-gray-900">{move || t!(i18n, current_courses)}</h2>
+                                <span class="text-sm font-medium text-gray-600">4" "{move || t!(i18n, courses_active)}</span>
                             </div>
 
                             <div class="space-y-6">
@@ -265,8 +273,8 @@ pub fn Home() -> impl IntoView {
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-xl font-bold text-gray-900">Что требует внимания?</h2>
-                                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">5 пунктов</span>
+                                <h2 class="text-xl font-bold text-gray-900">{move || t!(i18n, what_neends_attention)}</h2>
+                                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">5" "{move || t!(i18n, points)}</span>
                             </div>
 
                             <div class="space-y-4">
@@ -320,11 +328,11 @@ pub fn Home() -> impl IntoView {
                         </div>
 
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h2 class="text-xl font-bold text-gray-900 mb-6">Учебная траектория</h2>
+                            <h2 class="text-xl font-bold text-gray-900 mb-6">{move || t!(i18n, learning_trajectory)}</h2>
 
                             <div class="space-y-4">
                                 <div>
-                                    <h3 class="font-semibold text-gray-700 mb-2">1 курс</h3>
+                                    <h3 class="font-semibold text-gray-700 mb-2">1" " {move || t!(i18n, course)}</h3>
                                     <div class="flex flex-wrap gap-2">
                                         <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">"✓ Математика"</span>
                                         <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">"✓ Физика"</span>
@@ -333,7 +341,7 @@ pub fn Home() -> impl IntoView {
                                 </div>
 
                                 <div>
-                                    <h3 class="font-semibold text-gray-700 mb-2">2 курс</h3>
+                                    <h3 class="font-semibold text-gray-700 mb-2">2" " {move || t!(i18n, course)}</h3>
                                     <div class="flex flex-wrap gap-2">
                                         <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">"✓ Алгоритмы"</span>
                                         <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">Базы данных</span>
@@ -342,7 +350,7 @@ pub fn Home() -> impl IntoView {
                                 </div>
 
                                 <div>
-                                    <h3 class="font-semibold text-gray-700 mb-2">3 курс</h3>
+                                    <h3 class="font-semibold text-gray-700 mb-2">3" " {move || t!(i18n, course)}</h3>
                                     <div class="flex flex-wrap gap-2">
                                         <span class="px-3 py-1 bg-gray-100 text-gray-600 text-sm font-medium rounded-full">Веб-разработка</span>
                                         <span class="px-3 py-1 bg-gray-100 text-gray-600 text-sm font-medium rounded-full">Мобильная разработка</span>
@@ -353,15 +361,15 @@ pub fn Home() -> impl IntoView {
                                     <div class="flex items-center gap-4 text-sm text-gray-600">
                                         <div class="flex items-center gap-1">
                                             <div class="w-3 h-3 bg-green-500 rounded"></div>
-                                            <span>Завершено</span>
+                                            <span>{move || t!(i18n, completed)}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <div class="w-3 h-3 bg-blue-500 rounded"></div>
-                                            <span>"В процессе"</span>
+                                            <span>{move || t!(i18n, in_process)}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <div class="w-3 h-3 bg-gray-300 rounded"></div>
-                                            <span>Запланировано</span>
+                                            <span>{move || t!(i18n, planned)}</span>
                                         </div>
                                     </div>
                                 </div>

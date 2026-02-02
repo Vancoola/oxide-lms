@@ -1,53 +1,49 @@
 use leptos::prelude::*;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::path;
-use crate::component::header::{ConditionalHeader};
+use oxide_i18n::oxide_i18n::i18n::I18nContextProvider;
+use oxide_ui::component::header::ConditionalHeader;
+use oxide_ui::page::login::Login;
+use oxide_ui::page::not_found::NotFound;
+use oxide_web_common::auth::AuthProvider;
+use crate::component::header::{Header};
 use crate::page::dean_online::DeanOnline;
 use crate::page::home::Home;
-use crate::page::login::Login;
 use crate::page::programs::Programs;
-use crate::page::not_found::NotFound;
 use crate::page::student::profile::Profile;
 
 #[component]
-pub fn AppRouter() -> impl IntoView{
+pub fn AppRouter() -> impl IntoView {
+
+    leptos_meta::provide_meta_context();
+
     view! {
+        // <Title
+        //     // reactively sets document.title when `name` changes
+        //     text=move || name.get()
+        //     // applies the `formatter` function to the `text` value
+        //     formatter=|text| format!("“{text}” is your name")
+        //   />
         <div id="root">
             <Router>
-                <main>
-                    <ConditionalHeader/>
-                    <div class="container mx-auto px-4">
-                        <Routes fallback=NotFound>
-                            <Route path=path!("") view=Home />
-                            <Route path=path!("/programs") view=Programs />
-                            <Route path=path!("/login") view=Login />
-                            <Route path=path!("/profile") view=Profile />
-                            <Route path=path!("/dean-online") view=DeanOnline />
-                        </Routes>
-                    </div>
-                </main>
+                <AuthProvider>
+                    <I18nContextProvider>
+                        <main>
+                            <ConditionalHeader><Header/></ConditionalHeader>
+                            <div class="container mx-auto px-4">
+                                <Routes fallback=NotFound>
+                                    <Route path=path!("/") view=Home />
+                                    <Route path=path!("/programs") view=Programs />
+                                    <Route path=path!("/login") view=Login />
+                                    <Route path=path!("/profile") view=Profile />
+                                    <Route path=path!("/dean-online") view=DeanOnline />
+                                </Routes>
+                            </div>
+                        </main>
+                    </I18nContextProvider>
+                </AuthProvider>
             </Router>
         </div>
     }
 }
 
-// #[component]
-// pub fn SimpleCounter(initial_value: i32) -> impl IntoView {
-//     // create a reactive signal with the initial value
-//     let (value, set_value) = signal(initial_value);
-//
-//     // create event handlers for our buttons
-//     // note that `value` and `set_value` are `Copy`, so it's super easy to move them into closures
-//     let clear = move |_| set_value.set(0);
-//     let decrement = move |_| *set_value.write() -= 1;
-//     let increment = move |_| *set_value.write() += 1;
-//
-//     view! {
-//         <div>
-//             <button on:click=clear>"Clear"</button>
-//             <button on:click=decrement>"-1"</button>
-//             <span>"Value: " {value} "!"</span>
-//             <button on:click=increment>"+1"</button>
-//         </div>
-//     }
-// }

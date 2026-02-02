@@ -1,7 +1,9 @@
 [package]
-name = "oxide-web"
+name = "oxide-admin"
 version.workspace = true
 edition.workspace = true
+authors.workspace = true
+license.workspace = true
 
 [dependencies]
 leptos.workspace = true
@@ -12,7 +14,7 @@ reqwasm.workspace = true
 serde.workspace = true
 
 oxide-web-common = {path = "../oxide-web-common"}
-oxide-ui = {path="../oxide-ui"}
+oxide-ui = {path = "../oxide-ui"}
 oxide-i18n = {path = "../oxide-i18n"}
 
 [build-dependencies]

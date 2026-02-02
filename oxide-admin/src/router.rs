@@ -1,0 +1,29 @@
+use leptos::prelude::{component, ClassAttribute, IntoView};
+use leptos::prelude::*;
+use leptos_router::components::{Route, Router, Routes};
+use leptos_router::path;
+use oxide_i18n::oxide_i18n::i18n::I18nContextProvider;
+use oxide_ui::page::login::Login;
+use oxide_ui::page::not_found::NotFound;
+use oxide_web_common::auth::AuthProvider;
+
+#[component]
+pub fn AppRouter() -> impl IntoView {
+    view! {
+        <div>
+            <Router>
+                <AuthProvider>
+                    <I18nContextProvider>
+                        <main>
+                            <div class="container mx-auto px-4">
+                                <Routes fallback=NotFound>
+                                    <Route path=path!("/login") view=Login />
+                                </Routes>
+                            </div>
+                        </main>
+                    </I18nContextProvider>
+                </AuthProvider>
+            </Router>
+        </div>
+    }
+}
