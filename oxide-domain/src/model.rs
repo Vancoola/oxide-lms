@@ -24,6 +24,7 @@ pub struct Faculty {
     pub id: Uuid,
     pub name: String,
     pub short_name: String,  // "ИТИ", "ФЭМ" и т.д.
+    pub description: Option<String>,
     pub dean_id: Uuid,
     pub is_active: bool,
 }
@@ -83,17 +84,30 @@ pub struct Profile {
     pub last_name: String,
     pub patronymic: Option<String>,
 
-    pub status: TrainingStatus,
-
-    pub speciality_id: Uuid,
-    pub faculty_id: Uuid,
-    pub group_id: Option<Uuid>,               // учебная группа
-
     pub created_at: OffsetDateTime,
     pub updated_at: OffsetDateTime,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StudentAccount {
+    pub id: Uuid,
+    pub user_id: Uuid,
+
+    pub status: TrainingStatus,
+
+    pub faculty_id: Uuid,
+    pub group_id: Option<Uuid>,               // учебная группа
     pub enrolled_at: Option<OffsetDateTime>,  // дата зачисления
     pub graduated_at: Option<OffsetDateTime>, // дата выпуска
     pub student_id_number: Option<String>,    // номер студенческого
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Staff {
+    pub id: Uuid,
+    pub user_id: Uuid,
+
+    pub faculty_id: Uuid,
 }
 
 

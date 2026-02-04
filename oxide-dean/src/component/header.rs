@@ -25,19 +25,19 @@ pub fn Header() -> impl IntoView {
 
                     <div class="hidden md:flex items-center space-x-6">
                         <a href="/" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                            {t!(i18n, my_training)}
-                        </a>
-                        <a href="/courses" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                            {t!(i18n, courses)}
+                            {t!(i18n, home)}
                         </a>
                         <a href="/schedule" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                             {t!(i18n, schedule)}
                         </a>
-                        <a href="/news" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                            {t!(i18n, news)}
+                        <a href="/staff" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                            {t!(i18n, staff)}
                         </a>
-                        <a href="/dean-online" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                            {t!(i18n, dean)}
+                        <a href="/faculty" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                            {t!(i18n, settings)}
+                        </a>
+                        <a href="/students" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                            {t!(i18n, students)}
                         </a>
                     </div>
 

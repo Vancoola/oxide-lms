@@ -8,6 +8,7 @@ use oxide_ui::page::login::Login;
 use oxide_ui::page::not_found::NotFound;
 use oxide_web_common::auth::AuthProvider;
 use crate::component::header::Header;
+use crate::page::faculty::Faculty;
 use crate::page::home::Home;
 
 #[component]
@@ -22,6 +23,7 @@ pub fn AppRouter() -> impl IntoView {
                             <div class="container mx-auto px-4">
                                 <Routes fallback=NotFound>
                                     <Route path=path!("/login") view=Login />
+                                    <Route path=path!("/faculty") view=Faculty />
                                     <Route path=path!("/") view=Home />
                                 </Routes>
                             </div>
