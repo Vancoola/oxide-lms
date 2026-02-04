@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::{PathBuf};
 use leptos_i18n_build::{Config, TranslationsInfos};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

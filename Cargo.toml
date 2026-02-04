@@ -1,12 +1,12 @@
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-authors = ["ООО 'Аксион Тех' <info@axion-tech.ru>", "Суздальцев Денис Сергеевич <suzdaltsevdenis@icloud.com>"]
+authors = ["Суздальцев Денис Сергеевич <suzdaltsevdenis@icloud.com>"]
 license = "MIT"
 
 [workspace]
 resolver = "2"
-members = ["oxide-admin","oxide-api", "oxide-business", "oxide-data", "oxide-domain", "oxide-i18n", "oxide-ui", "oxide-web", "oxide-web-common"]
+members = ["oxide-admin","oxide-api", "oxide-business", "oxide-data", "oxide-dean", "oxide-domain", "oxide-i18n", "oxide-ui", "oxide-web", "oxide-web-common"]
 
 [workspace.dependencies]
 leptos = { version = "0.8.15", features = ["csr"] }

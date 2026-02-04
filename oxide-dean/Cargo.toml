@@ -1,5 +1,5 @@
 [package]
-name = "oxide-admin"
+name = "oxide-dean"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

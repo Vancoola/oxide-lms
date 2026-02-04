@@ -1,3 +1,4 @@
+use leptos::prelude::{component, ClassAttribute, IntoView};
 use leptos::prelude::*;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::path;
@@ -6,16 +7,13 @@ use oxide_ui::component::header::ConditionalHeader;
 use oxide_ui::page::login::Login;
 use oxide_ui::page::not_found::NotFound;
 use oxide_web_common::auth::AuthProvider;
-use crate::component::header::{Header};
-use crate::page::dean_online::DeanOnline;
+use crate::component::header::Header;
 use crate::page::home::Home;
-use crate::page::programs::Programs;
-use crate::page::student::profile::Profile;
 
 #[component]
 pub fn AppRouter() -> impl IntoView {
     view! {
-        <div id="root">
+        <div>
             <Router>
                 <AuthProvider>
                     <I18nContextProvider>
@@ -23,11 +21,8 @@ pub fn AppRouter() -> impl IntoView {
                             <ConditionalHeader><Header/></ConditionalHeader>
                             <div class="container mx-auto px-4">
                                 <Routes fallback=NotFound>
-                                    <Route path=path!("/") view=Home />
-                                    <Route path=path!("/programs") view=Programs />
                                     <Route path=path!("/login") view=Login />
-                                    <Route path=path!("/profile") view=Profile />
-                                    <Route path=path!("/dean-online") view=DeanOnline />
+                                    <Route path=path!("/") view=Home />
                                 </Routes>
                             </div>
                         </main>
@@ -37,4 +32,3 @@ pub fn AppRouter() -> impl IntoView {
         </div>
     }
 }
-
