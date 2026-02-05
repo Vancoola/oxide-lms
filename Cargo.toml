@@ -4,9 +4,34 @@ edition = "2024"
 authors = ["Суздальцев Денис Сергеевич <suzdaltsevdenis@icloud.com>"]
 license = "MIT"
 
+[profile.release]
+panic = "unwind"
+lto = "thin"
+opt-level = 3
+strip = "debuginfo"
+
+
+[profile.client-release]
+inherits = "release"
+panic = "abort"
+opt-level = "z"
+strip = "symbols"
+
+
 [workspace]
 resolver = "2"
-members = ["oxide-admin","oxide-api", "oxide-business", "oxide-data", "oxide-dean", "oxide-domain", "oxide-i18n", "oxide-ui", "oxide-web", "oxide-web-common"]
+members = [
+    "server/oxide-api",
+    "server/oxide-business",
+    "server/oxide-data",
+    "server/oxide-domain",
+    "client/oxide-admin",
+    "client/oxide-dean",
+    "client/oxide-i18n",
+    "client/oxide-ui",
+    "client/oxide-web",
+    "client/oxide-web-common"
+]
 
 [workspace.dependencies]
 leptos = { version = "0.8.15", features = ["csr"] }

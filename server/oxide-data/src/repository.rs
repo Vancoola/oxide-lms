@@ -25,13 +25,13 @@ impl PostgresContext {
     }
 
     pub async fn get_user_by_email(&self, email: &str) -> Result<PublicUser, DataError> {
-        let record = sqlx::query!("SELECT id, email, name FROM users WHERE email = $1", email)
+        let record = sqlx::query!("SELECT id, email FROM users WHERE email = $1", email)
             .fetch_one(&self.pool)
             .await?;
         Ok(PublicUser{
             id: record.id,
             email: record.email,
-            name: record.name
+            name: "".to_string()
         })
     }
 

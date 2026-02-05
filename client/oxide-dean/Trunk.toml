@@ -1,0 +1,7 @@
+[build]
+target = "index.html"
+cargo_profile = "client-release"
+
+[serve]
+port = 8085
+open = true
