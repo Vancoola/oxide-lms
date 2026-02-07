@@ -2,13 +2,10 @@
 create table if not exists users
 (
     id       uuid primary key default gen_random_uuid(),
-    email    text not null unique,
-    password text not null
+    email    text not null,
+    password text not null,
+    is_admin bool not null    default false
 );
-
-create index if not exists idx_users_email on users (email);
-
-
 
 create type training_status as enum (
     'applicant',
@@ -62,8 +59,8 @@ create type course_enrollments_status as enum (
 create table if not exists organizational_unit_types
 (
     id                uuid primary key default gen_random_uuid(),
-    code              text unique not null, -- university, faculty, group
-    name              jsonb       not null, -- {"en": "Department", "ru": "Кафедра"}
+    code              text unique  not null, -- university, faculty, group
+    name              varchar(255) not null, -- {"en": "Department", "ru": "Кафедра"}
     can_have_students bool             default false
 );
 
@@ -93,9 +90,11 @@ create table if not exists profiles
 (
     id          uuid primary key                  default gen_random_uuid(),
     user_id     uuid                     not null references users (id) on delete cascade,
-    first_name  text                     not null,
-    last_name   text                     not null,
+    first_name  text                     null,
+    last_name   text                     null,
     middle_name text                              default null,
+
+    is_active   bool                     not null default false,
 
     created_at  timestamp with time zone not null default now(),
     updated_at  timestamp with time zone not null default now()
@@ -287,6 +286,9 @@ create table if not exists grades
     graded_at     timestamptz      default now(),
     graded_by     uuid          not null references staff (id)
 );
+
+create unique index if not exists idx_users_email on users (email);
+create unique index if not exists idx_profile_user on profiles (user_id);
 
 create index idx_lesson_series_term on lesson_series (term_id);
 create index idx_lesson_series_course on lesson_series (course_id);

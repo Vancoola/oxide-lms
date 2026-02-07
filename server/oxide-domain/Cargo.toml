@@ -7,4 +7,5 @@ edition.workspace = true
 serde.workspace = true
 uuid.workspace = true
 time.workspace = true
-sqlx.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true

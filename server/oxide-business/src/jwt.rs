@@ -4,9 +4,7 @@ use uuid::Uuid;
 use crate::error::BusinessError;
 
 pub fn generate_jwt(user_id: &Uuid, secret_key: &str) -> Result<String, BusinessError> {
-
     let header = Header::new(Algorithm::HS256);
-
     Ok(encode(
         &header,
         &Claims {
@@ -14,7 +12,6 @@ pub fn generate_jwt(user_id: &Uuid, secret_key: &str) -> Result<String, Business
         },
         &EncodingKey::from_secret(secret_key.as_bytes()),
     )?)
-
 }
 
 #[derive(Serialize, Deserialize)]

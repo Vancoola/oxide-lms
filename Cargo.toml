@@ -7,6 +7,7 @@ license = "MIT"
 [profile.release]
 panic = "unwind"
 lto = "thin"
+codegen-units = 1
 opt-level = 3
 strip = "debuginfo"
 
@@ -14,6 +15,7 @@ strip = "debuginfo"
 [profile.client-release]
 inherits = "release"
 panic = "abort"
+codegen-units = 1
 opt-level = "z"
 strip = "symbols"
 
@@ -53,6 +55,7 @@ uuid = { version = "1.20.0", features = ["v4", "serde"] }
 sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid", "time"] }
 time = { version = "0.3.46", features = ["serde"] }
 thiserror = "2.0.18"
+async-trait = "0.1.89"
 
 
 axum = "0.8.8"
