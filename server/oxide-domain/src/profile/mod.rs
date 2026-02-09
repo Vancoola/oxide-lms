@@ -1,10 +1,12 @@
 pub mod repository;
 pub mod service;
+pub mod event;
 
 use crate::error::DomainError;
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use uuid::Uuid;
+use crate::profile::event::ProfileEvent;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Profile {
@@ -19,6 +21,8 @@ pub struct Profile {
 
     pub created_at: OffsetDateTime,
     pub updated_at: OffsetDateTime,
+
+    events: Vec<ProfileEvent>,
 }
 
 impl Profile {
@@ -32,6 +36,7 @@ impl Profile {
             created_at: OffsetDateTime::now_utc(),
             updated_at: OffsetDateTime::now_utc(),
             is_activate: false,
+            events: Vec::new(),
         })
     }
 
@@ -54,6 +59,7 @@ impl Profile {
             created_at,
             updated_at,
             is_activate,
+            events: Vec::new(),
         }
     }
 
@@ -74,4 +80,9 @@ impl Profile {
         self.is_activate = true;
         Ok(())
     }
+
+    pub fn pull_events(&mut self) -> Vec<ProfileEvent> {
+        std::mem::take(&mut self.events)
+    }
+
 }

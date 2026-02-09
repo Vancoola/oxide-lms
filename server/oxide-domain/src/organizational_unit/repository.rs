@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use uuid::Uuid;
 use crate::error::DomainError;
 use crate::organizational_unit::{Unit, UnitType};
 
@@ -9,5 +10,7 @@ pub trait UnitTypeRepository {
 
 #[async_trait]
 pub trait UnitRepository {
-    async fn create_unit(&self, unit: Unit) -> Result<UnitType, DomainError>;
+    async fn create_unit(&self, unit: Unit) -> Result<Unit, DomainError>;
+    async fn get_unit_by_id(&self, id: Uuid) -> Result<Unit, DomainError>;
+    async fn get_units_by_parent_id(&self, pid: Uuid) -> Result<Vec<Unit>, DomainError>;
 }

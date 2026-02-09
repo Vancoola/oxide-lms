@@ -8,3 +8,15 @@ thiserror.workspace = true
 jsonwebtoken.workspace = true
 uuid.workspace = true
 serde.workspace = true
+
+tokio.workspace = true
+wasmtime.workspace = true
+wit-bindgen.workspace = true
+async-trait.workspace = true
+
+oxide-domain = {path = "../oxide-domain"}
+
+[dev-dependencies]
+tokio.workspace = true
+mockall.workspace = true
+rstest.workspace = true

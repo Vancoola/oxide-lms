@@ -3,8 +3,8 @@ use oxide_domain::error::DomainError;
 use oxide_domain::profile::Profile;
 use oxide_domain::profile::repository::ProfileRepository;
 use oxide_domain::user::User;
-use oxide_domain::user::repository::UserRepository;
 use sqlx::types::Uuid;
+use oxide_domain::user::repository::UserRepository;
 
 #[derive(Clone)]
 pub struct PostgresContext {
@@ -42,8 +42,8 @@ impl UserRepository for PostgresContext {
         .map_err(to_domain_err)?;
         Ok(User::load(
             record.id,
-            record.email.as_str(),
-            record.password.as_str(),
+            record.email,
+            record.password,
             record.is_admin,
         ))
     }
@@ -61,8 +61,8 @@ impl UserRepository for PostgresContext {
         .map_err(to_domain_err)?;
         Ok(User::load(
             record.id,
-            record.email.as_str(),
-            record.password.as_str(),
+            record.email,
+            record.password,
             record.is_admin,
         ))
     }
@@ -74,15 +74,19 @@ impl UserRepository for PostgresContext {
     async fn create_user(&self, user: &User) -> Result<(), DomainError> {
         sqlx::query!(
             r#"INSERT INTO users (id, email, password, is_admin) VALUES ($1, $2, $3, $4)"#,
-            user.id,
-            user.email,
-            user.password,
+            user.id.as_uuid(),
+            user.email.as_str(),
+            user.password_hash.as_str(),
             user.is_admin
         )
         .execute(&self.pool)
         .await
         .map_err(to_domain_err)?;
         Ok(())
+    }
+
+    async fn create_user_and_publish(&self, user: &mut User) -> Result<(), DomainError> {
+        todo!()
     }
 
     async fn get_password_by_email(&self, email: &str) -> Result<(Uuid, String), DomainError> {

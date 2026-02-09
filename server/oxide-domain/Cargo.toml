@@ -9,3 +9,10 @@ uuid.workspace = true
 time.workspace = true
 async-trait.workspace = true
 thiserror.workspace = true
+email_address.workspace = true
+
+zeroize.workspace = true
+
+[dev-dependencies]
+mockall.workspace = true
+rstest.workspace = true

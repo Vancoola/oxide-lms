@@ -1,7 +1,7 @@
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-authors = ["Суздальцев Денис Сергеевич <suzdaltsevdenis@icloud.com>"]
+authors = ["Suzdaltsev Denis <suzdaltsevdenis@icloud.com>"]
 license = "MIT"
 
 [profile.release]
@@ -32,7 +32,9 @@ members = [
     "client/oxide-i18n",
     "client/oxide-ui",
     "client/oxide-web",
-    "client/oxide-web-common"
+    "client/oxide-web-common",
+    "server/oxide-wasm-provider",
+    "oxide-shared-types"
 ]
 
 [workspace.dependencies]
@@ -46,16 +48,21 @@ leptos_i18n_build = {version =  "0.6.0", features = ["csr"] }
 
 
 dotenvy = "0.15.7"
-tracing = "0.1.44"
-tracing-subscriber = "0.3.22"
-tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread", "sync"] }
 serde = { version = "1.0.228", features = ["derive"] }
-validator = { version = "0.20.0", features = ["derive"] }
 uuid = { version = "1.20.0", features = ["v4", "serde"] }
 sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid", "time"] }
 time = { version = "0.3.46", features = ["serde"] }
-thiserror = "2.0.18"
 async-trait = "0.1.89"
+email_address = "0.2.9"
+
+
+tracing = "0.1.44"
+tracing-subscriber = "0.3.22"
+validator = { version = "0.20.0", features = ["derive"] }
+thiserror = "2.0.18"
+mockall = "0.14.0"
+rstest = "0.26.1"
 
 
 axum = "0.8.8"
@@ -71,3 +78,7 @@ jsonwebtoken = "10.3.0"
 
 utoipa = { version = "5.4.0", features = ["axum_extras", "uuid"] }
 utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
+
+
+wasmtime = "41.0.3"
+wit-bindgen = "0.52.0"

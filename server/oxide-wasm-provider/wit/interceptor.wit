@@ -1,0 +1,17 @@
+package oxide:lms;
+
+interface user-hooks {
+    record user-info {
+        email: string,
+    }
+
+    validate: func(user: user-info) -> result<_, string>;
+
+}
+
+world oxide-interceptor {
+    export user-hooks;
+    import logger: interface {
+            log: func(msg: string);
+    }
+}

@@ -8,14 +8,7 @@ pub struct CreateUser {
     pub password: String,
 }
 
-impl From<CreateUser> for User {
-    fn from(value: CreateUser) -> Self {
-        User::new(
-            value.email.as_str(),
-            value.password.as_str(),
-        ).unwrap()
-    }
-}
+
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PublicUser {
@@ -31,12 +24,4 @@ pub struct UserDbRow {
     pub password: String,
 }
 
-impl From<User> for UserDbRow {
-    fn from(value: User) -> Self {
-        Self {
-            id: value.id,
-            email: value.email,
-            password: value.password,
-        }
-    }
-}
+

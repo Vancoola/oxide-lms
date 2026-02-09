@@ -73,7 +73,8 @@ create table if not exists organizational_units
     specific_metadata jsonb,
     is_active         boolean          default true,
     created_at        timestamptz      default now(),
-    type_id           uuid references organizational_unit_types (id) not null
+    type_id           uuid references organizational_unit_types (id) not null,
+    path uuid[] not null default '{}'
 );
 
 create table if not exists specialities
@@ -290,6 +291,8 @@ create table if not exists grades
 create unique index if not exists idx_users_email on users (email);
 create unique index if not exists idx_profile_user on profiles (user_id);
 
+create index idx_units_path_gin on organizational_units using gin(path);
+
 create index idx_lesson_series_term on lesson_series (term_id);
 create index idx_lesson_series_course on lesson_series (course_id);
 
@@ -298,6 +301,15 @@ create index idx_staff_user on staff (user_id);
 
 create index idx_program_courses_program on program_courses (program_id);
 create index idx_program_courses_course on program_courses (course_id);
+
+
+
+-- create or replace function update_unit_path() returns trigger as $$
+--     begin
+--
+--     end;
+-- $$ language plpgsql;
+
 
 
 create or replace function validate_student_unit_trigger() returns trigger as
