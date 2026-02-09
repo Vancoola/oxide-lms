@@ -54,7 +54,8 @@ Unlike traditional systems where plugins can crash the entire server, Oxide runs
 Oxide uses a **Hexagonal/Clean Architecture** within a Cargo Workspace to keep the business logic separated from the infrastructure.
 
 ```mermaid
-graph TD
+graph LR
+    %% Клиентская часть
     subgraph Clients [Frontend Applications]
         direction TB
         admin[oxide-admin]
@@ -62,12 +63,14 @@ graph TD
         web[oxide-web]
     end
 
+    %% Общие компоненты фронтенда
     subgraph ClientShared [Client Shared]
         common[oxide-web-common]
         ui[oxide-ui]
         i18n[oxide-i18n]
     end
 
+    %% Связи клиентов с common
     admin --> common
     dean --> common
     web --> common
@@ -75,20 +78,33 @@ graph TD
     common --> ui
     common --> i18n
 
+    %% Общие типы для фронта и бэка
     shared_types[oxide-shared-types]
     web -.-> shared_types
     api -.-> shared_types
 
+    %% Серверная часть
     subgraph Server [Backend Engine]
         api[oxide-api]
         biz[oxide-business]
         data[oxide-data]
         wasm[oxide-wasm-provider]
         
+        
         api --> biz
         biz --> data
         biz --> wasm
-        wasm --> plugins[{WASM Plugins}]
+        wasm --> plugins{{WASM Plugins}}
+
+        dom[oxide-domain]
+
+        data --> dom
+        biz --> dom
+        wasm --> dom
+        
     end
 
     data --> db[(PostgreSQL)]
+
+    %% Стилизация (по желанию)
+   
