@@ -59,6 +59,19 @@ Oxide provides a unique "Sandboxed Extensibility" model.
 > [!TIP]
 > See `/examples/wasm-plugin-rust` for a template on how to create a custom grading hook.
 
+### 🔌 Plugin Contract (WIT)
+Oxide uses the **WASM Component Model**. Interfaces are defined using `WIT` (WebAssembly Interface Type) files, ensuring language-independent type safety.
+
+```wit
+interface grading-provider {
+    record score {
+        points: f32,
+        max-points: f32
+    }
+    calculate: func(attempt: string) -> score
+}
+```
+
 ---
 
 ## 🚀 Scalability & Future-Proofing
@@ -70,14 +83,31 @@ Oxide is built as a **Modular Monolith**. This means:
 
 ---
 
-## 🤝 Contributing
+## 📂 Project Structure
 
-We are looking for help with:
-- Implementing core domain logic.
-- Improving the WASM host environment.
-- Translating the UI (check `client/oxide-i18n`).
+<details>
+<summary>Explore the Cargo Workspace</summary>
 
-Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+```text
+.
+├── client/                 # Frontend applications & web resources
+│   ├── oxide-web/          # Main Student Portal (Leptos SPA)
+│   ├── oxide-admin/        # System Administration dashboard
+│   ├── oxide-dean/         # Educational management & Dean's office UI
+│   ├── oxide-ui/           # Shared Design System (Components, Tailwind, Styles)
+│   ├── oxide-web-common/   # Common frontend logic, hooks, and utilities
+│   └── oxide-i18n/         # Localization engine and translation files
+├── server/                 # Backend services & business logic
+│   ├── oxide-api/          # Entry point: Axum routes, middleware, and OpenAPI docs
+│   ├── oxide-business/     # Service layer: Orchestrates use-cases and workflows
+│   ├── oxide-domain/       # The Core: Entities, Repository traits, and Domain Events
+│   ├── oxide-data/         # Infrastructure: SQLx implementations & Persistence logic
+│   └── oxide-wasm-provider/# Plugin Engine: Wasmtime host and runtime isolation
+├── oxide-shared-types/     # Common DTOs and types shared between Client & Server
+├── migrations/             # SQLx migration files for PostgreSQL
+└── Cargo.toml              # Workspace manifest and global dependencies     
+```
+</details>
 
 ---
 
@@ -183,6 +213,42 @@ Oxide uses a unified DomainEvent enum that aggregates events from all sub-module
     
         GlobalEvent ==> Bus[Internal Event Bus / Subscriber]
 ```
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+* **Rust:** v1.82+ (Edition 2024)
+* **Trunk:** `cargo install trunk` (for frontend)
+* **SQLx CLI:** `cargo install sqlx-cli`
+* **Docker:** To run PostgreSQL and Redis
+
+### Quick Run
+1. **Infrastructure:** `docker-compose up -d`
+2. **Database:** `sqlx database setup`
+3. **Server:** `cargo run -p oxide-api`
+4. **Client:** `cd client/oxide-web && trunk serve`
+
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] **Phase 1:** Core LMS (Users, Courses, Lessons) - *In Progress*
+- [ ] **Phase 2:** WASM Plugin Registry & Hot-swapping
+- [ ] **Phase 3:** Mobile Client (Tauri / Leptos Native)
+- [ ] **Phase 4:** Advanced Analytics & AI-assisted grading
+
+---
+
+## 🤝 Contributing
+
+We are looking for help with:
+- Implementing core domain logic.
+- Improving the WASM host environment.
+- Translating the UI (check `client/oxide-i18n`).
+
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 <div align="center">
   Built with ❤️ and 🦀 by Suzdaltsev Denis
