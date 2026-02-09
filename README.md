@@ -182,8 +182,8 @@ Each domain module (e.g., `course`, `user`) follows a strict internal structure 
         repo[repository.rs: Repository Traits]
 
         subgraph Plugins [Plugin System]
-            registry[mod.rs: Registry: Entity]
-            hook[guard.rs / hook.rs / middleware.rs: Traits]
+            registry[mod.rs: Registry Entity]
+            hook[guard.rs / hook.rs / middleware.rs: Plugin Traits]
         end
     end
 
