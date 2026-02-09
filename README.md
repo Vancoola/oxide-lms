@@ -7,9 +7,15 @@
     <img src="https://img.shields.io/badge/Rust-2024-orange?logo=rust" alt="Rust Version">
     <img src="https://img.shields.io/badge/License-Apache_2.0-green" alt="License">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome">
-    <img src="https://img.shields.io/badge/Plugins-Wasmtime-6C4FBB?logo=webassembly" alt="Powered by Wasm">
-    <img src="https://img.shields.io/badge/Backend-Axum-lightgrey" alt="Backend">
-    <img src="https://img.shields.io/badge/Frontend-Leptos-blue" alt="Frontend">
+    <a href="https://crates.io/crates/leptos">
+      <img src="https://img.shields.io/crates/v/leptos?label=Leptos&color=blue&style=flat-square" alt="Leptos Version">
+    </a>
+    <a href="https://crates.io/crates/axum">
+      <img src="https://img.shields.io/crates/v/axum?label=Axum&color=orange&style=flat-square" alt="Axum Version">
+    </a>
+    <a href="https://crates.io/crates/wasmtime">
+      <img src="https://img.shields.io/crates/v/wasmtime?logo=webassembly&label=Wasmtime&color=black&style=flat-square" alt="Wasmtime Version">
+    </a>
   </p>
 
   <p>
@@ -49,16 +55,40 @@ Oxide uses a **Hexagonal/Clean Architecture** within a Cargo Workspace to keep t
 
 ```mermaid
 graph TD
-    subgraph Client
-        A[oxide-web] --> B[oxide-ui]
-        A --> C[oxide-shared-types]
+    subgraph Clients [Frontend Applications]
+        direction TB
+        admin[oxide-admin]
+        dean[oxide-dean]
+        web[oxide-web]
     end
 
-    subgraph Server
-        D[oxide-api] --> E[oxide-business]
-        E --> F[oxide-data]
-        E --> G[oxide-wasm-provider]
-        G --> H[WASM Plugins]
+    subgraph ClientShared [Client Shared]
+        common[oxide-web-common]
+        ui[oxide-ui]
+        i18n[oxide-i18n]
     end
 
-    F --> I[(PostgreSQL)]
+    admin --> common
+    dean --> common
+    web --> common
+    
+    common --> ui
+    common --> i18n
+
+    shared_types[oxide-shared-types]
+    web -.-> shared_types
+    api -.-> shared_types
+
+    subgraph Server [Backend Engine]
+        api[oxide-api]
+        biz[oxide-business]
+        data[oxide-data]
+        wasm[oxide-wasm-provider]
+        
+        api --> biz
+        biz --> data
+        biz --> wasm
+        wasm --> plugins[{WASM Plugins}]
+    end
+
+    data --> db[(PostgreSQL)]
