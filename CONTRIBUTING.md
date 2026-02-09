@@ -108,7 +108,8 @@ sqlx migrate add -r <name_of_migration>
 ```bash
 sqlx migrate run 
 ```
->[!IMPORTANT] Always provide both up and down (reversible) migrations if possible.
+>[!IMPORTANT] 
+>Always provide both up and down (reversible) migrations if possible.
 
 ---
 
