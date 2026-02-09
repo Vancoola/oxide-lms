@@ -117,7 +117,6 @@ Oxide uses a **Hexagonal/Clean Architecture** within a Cargo Workspace to keep t
 
 ```mermaid
 graph LR
-    %% Клиентская часть
     subgraph Clients [Frontend Applications]
         direction TB
         admin[oxide-admin]
@@ -125,14 +124,12 @@ graph LR
         web[oxide-web]
     end
 
-    %% Общие компоненты фронтенда
     subgraph ClientShared [Client Shared]
         common[oxide-web-common]
         ui[oxide-ui]
         i18n[oxide-i18n]
     end
 
-    %% Связи клиентов с common
     admin --> common
     dean --> common
     web --> common
@@ -140,12 +137,10 @@ graph LR
     common --> ui
     common --> i18n
 
-    %% Общие типы для фронта и бэка
     shared_types[oxide-shared-types]
     web -.-> shared_types
     api -.-> shared_types
 
-    %% Серверная часть
     subgraph Server [Backend Engine]
         api[oxide-api]
         biz[oxide-business]

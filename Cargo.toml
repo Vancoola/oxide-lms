@@ -28,13 +28,14 @@ members = [
     "server/oxide-business",
     "server/oxide-data",
     "server/oxide-domain",
+    "server/oxide-wasm-provider",
+    "server/oxide-macros",
     "client/oxide-admin",
     "client/oxide-dean",
     "client/oxide-i18n",
     "client/oxide-ui",
     "client/oxide-web",
     "client/oxide-web-common",
-    "server/oxide-wasm-provider",
     "oxide-shared-types"
 ]
 
@@ -56,6 +57,10 @@ sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "
 time = { version = "0.3.46", features = ["serde"] }
 async-trait = "0.1.89"
 email_address = "0.2.9"
+
+
+syn = "2.0.114"
+quote = "1.0.44"
 
 
 tracing = "0.1.44"
