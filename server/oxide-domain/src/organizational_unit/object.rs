@@ -43,6 +43,12 @@ pub struct UnitName(String);
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ShortName(String);
+impl ShortName {
+    pub fn new(name: String) -> Self {
+        let name = name.trim().to_uppercase();
+        Self(name)
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct UnitPath(Vec<UnitId>);

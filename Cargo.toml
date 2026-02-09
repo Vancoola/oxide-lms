@@ -2,7 +2,8 @@
 version = "0.1.0"
 edition = "2024"
 authors = ["Suzdaltsev Denis <suzdaltsevdenis@icloud.com>"]
-license = "MIT"
+license = "Apache-2.0"
+
 
 [profile.release]
 panic = "unwind"

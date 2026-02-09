@@ -1,0 +1,10 @@
+Oxide LMS
+Copyright 2024-2026 Suzdaltsev Denis <suzdaltsevdenis@icloud.com>
+
+This product includes software developed by Suzdaltsev Denis
+and contributors to the Oxide project.
+
+This project leverages the following third-party components:
+* Wasmtime (https://wasmtime.dev/) - Bytecode Alliance
+* Leptos Framework (https://leptos.dev/)
+* Axum (https://github.com/tokio-rs/axum)

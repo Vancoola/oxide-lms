@@ -1,0 +1,4 @@
+/target
+/oxide-web/dist
+.env
+/postgres_data
