@@ -14,7 +14,7 @@ use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, Any, CorsLayer};
 use tracing::info;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use oxide_data::repository::PostgresContext;
+use oxide_data::PostgresContext;
 use crate::handler::auth::login;
 use crate::handler::user::me;
 use crate::openapi::ApiDoc;

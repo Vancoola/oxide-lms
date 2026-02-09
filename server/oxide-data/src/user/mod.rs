@@ -5,27 +5,9 @@ use oxide_domain::profile::repository::ProfileRepository;
 use oxide_domain::user::User;
 use sqlx::types::Uuid;
 use oxide_domain::user::repository::UserRepository;
+use crate::{to_domain_err, PostgresContext};
 
-#[derive(Clone)]
-pub struct PostgresContext {
-    pool: sqlx::PgPool,
-}
 
-impl PostgresContext {
-    pub fn new(pool: sqlx::PgPool) -> Self {
-        Self { pool }
-    }
-}
-
-fn to_domain_err(err: sqlx::Error) -> DomainError {
-    match err {
-        sqlx::Error::RowNotFound => DomainError::NotFound,
-        sqlx::Error::Database(db_err) if db_err.code().as_deref() == Some("23505") => {
-            DomainError::AlreadyExists
-        }
-        _ => DomainError::Infrastructure(err.to_string()),
-    }
-}
 
 #[async_trait]
 impl UserRepository for PostgresContext {
@@ -37,9 +19,9 @@ impl UserRepository for PostgresContext {
             WHERE u.id = $1"#,
             id
         )
-        .fetch_one(&self.pool)
-        .await
-        .map_err(to_domain_err)?;
+            .fetch_one(&self.pool)
+            .await
+            .map_err(to_domain_err)?;
         Ok(User::load(
             record.id,
             record.email,
@@ -56,9 +38,9 @@ impl UserRepository for PostgresContext {
             WHERE u.email = $1"#,
             email
         )
-        .fetch_one(&self.pool)
-        .await
-        .map_err(to_domain_err)?;
+            .fetch_one(&self.pool)
+            .await
+            .map_err(to_domain_err)?;
         Ok(User::load(
             record.id,
             record.email,
@@ -79,9 +61,9 @@ impl UserRepository for PostgresContext {
             user.password_hash.as_str(),
             user.is_admin
         )
-        .execute(&self.pool)
-        .await
-        .map_err(to_domain_err)?;
+            .execute(&self.pool)
+            .await
+            .map_err(to_domain_err)?;
         Ok(())
     }
 
@@ -109,9 +91,9 @@ impl ProfileRepository for PostgresContext {
             "#,
             id
         )
-        .fetch_one(&self.pool)
-        .await
-        .map_err(to_domain_err)?;
+            .fetch_one(&self.pool)
+            .await
+            .map_err(to_domain_err)?;
         Ok(Profile::load(
             record.id,
             record.user_id,

@@ -1,5 +1,3 @@
-pub mod model;
-pub mod dto;
 pub mod course;
 pub mod error;
 pub mod user;

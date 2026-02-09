@@ -92,7 +92,7 @@ When adding a new feature (e.g., `library`), follow the established pattern:
 ```bash
 cargo clippy --workspace --all-targets -- -D warnings
 ```
-- **Type Safety:** Avoid `unwrap()`. Prefer `thiserror` for graceful error handling.
+- **Type Safety:** Avoid `unwrap()`. Prefer `anyhow` or `thiserror` for graceful error handling.
 
 ### 📝 Documentation
 - Public functions in oxide-domain and oxide-business must have doc-comments (`///`).

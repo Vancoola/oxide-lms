@@ -11,8 +11,8 @@ impl UnitTypeId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())
     }
-    pub fn load(id: Uuid) -> Self {
-        Self(id)
+    pub fn load(id: &Uuid) -> Self {
+        Self(id.to_owned())
     }
 }
 
@@ -65,13 +65,8 @@ impl UnitPath {
         new_path.push(&parent.id);
         new_path
     }
-    
-    
-    
-    
+
     pub fn push(&mut self, id: &UnitId) {
         self.0.push(id.clone());
     }
-    
-    
 }

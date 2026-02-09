@@ -40,7 +40,7 @@ impl UnitType {
         })
     }
 
-    pub fn load(id: Uuid, code: UnitCode, name: UnitName, can_have_students: bool) -> Self {
+    pub fn load(id: &Uuid, code: UnitCode, name: UnitName, can_have_students: bool) -> Self {
         Self {
             id: UnitTypeId::load(id),
             code,
@@ -80,12 +80,12 @@ impl Unit {
     }
 
     pub fn load(
-        id: Uuid,
+        id: &Uuid,
         name: UnitName,
         short_name: ShortName,
         parent_id: Option<Uuid>,
         is_active: bool,
-        type_id: Uuid,
+        type_id: &Uuid,
         created_at: OffsetDateTime,
         path: Vec<Uuid>
     ) -> Self {
@@ -94,7 +94,7 @@ impl Unit {
             None => None
         };
         Self {
-            id: UnitId::load(&id),
+            id: UnitId::load(id),
             name,
             short_name,
             parent_id,

@@ -1,18 +1,25 @@
-pub mod repository;
-pub mod error;
-pub mod dto;
+use oxide_domain::error::DomainError;
 
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+pub mod error;
+pub mod user;
+
+#[derive(Clone)]
+pub struct PostgresContext {
+    pool: sqlx::PgPool,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl PostgresContext {
+    pub fn new(pool: sqlx::PgPool) -> Self {
+        Self { pool }
+    }
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+pub(crate) fn to_domain_err(err: sqlx::Error) -> DomainError {
+    match err {
+        sqlx::Error::RowNotFound => DomainError::NotFound,
+        sqlx::Error::Database(db_err) if db_err.code().as_deref() == Some("23505") => {
+            DomainError::AlreadyExists
+        }
+        _ => DomainError::Infrastructure(err.to_string()),
     }
 }

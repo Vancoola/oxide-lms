@@ -3,7 +3,7 @@ use axum::extract::State;
 use axum::http::StatusCode;
 use axum::Json;
 use axum::response::IntoResponse;
-use oxide_data::dto::JwtToken;
+use oxide_shared_types::auth::JwtToken;
 use crate::AppState;
 use crate::dto::auth::LoginRequest;
 
