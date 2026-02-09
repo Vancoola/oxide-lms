@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1>Oxide LMS</h1>
+  <h1>Oxide LMS🦀</h1>
   <p><b>A high-performance, modular Learning Management System powered by Rust and WebAssembly.</b></p>
 
   <p>
