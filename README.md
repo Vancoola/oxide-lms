@@ -104,6 +104,7 @@ graph LR
         
     end
 
+    data --> redis[(Redis)]
     data --> db[(PostgreSQL)]
 
     %% Стилизация (по желанию)
