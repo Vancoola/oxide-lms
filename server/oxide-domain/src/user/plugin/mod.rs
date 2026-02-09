@@ -1,10 +1,10 @@
 use std::sync::Arc;
-use crate::user::plugin::guards::PreRegistrationGuard;
-use crate::user::plugin::hooks::PostRegistrationHook;
+use crate::user::plugin::guard::PreRegistrationGuard;
+use crate::user::plugin::hook::PostRegistrationHook;
 use crate::user::plugin::middleware::UserMiddleware;
 
-pub mod hooks;
-pub mod guards;
+pub mod hook;
+pub mod guard;
 pub mod middleware;
 
 pub struct UserExtensionRegistry {

@@ -49,6 +49,38 @@ Unlike traditional systems where plugins can crash the entire server, Oxide runs
 
 ---
 
+## 🧩 Plugin System
+
+Oxide provides a unique "Sandboxed Extensibility" model.
+- **Language Agnostic:** Write plugins in Rust, Zig, C++, or Go.
+- **Hot Reloading:** Inject new logic without restarting the server.
+- **Safety:** Plugins cannot access the host file system or network unless explicitly granted permission.
+
+> [!TIP]
+> See `/examples/wasm-plugin-rust` for a template on how to create a custom grading hook.
+
+---
+
+## 🚀 Scalability & Future-Proofing
+
+Oxide is built as a **Modular Monolith**. This means:
+* **Strong Boundaries:** Modules in `oxide-domain` do not share state.
+* **Event-Driven:** Cross-module communication happens strictly through the `DomainEvent` bus.
+* **Cloud Native:** The design is pre-optimized for splitting into **Microservices**. If the `course` module grows too large, it can be moved to a separate container with its own database, communicating via the existing Event System (e.g., over NATS or RabbitMQ).
+
+---
+
+## 🤝 Contributing
+
+We are looking for help with:
+- Implementing core domain logic.
+- Improving the WASM host environment.
+- Translating the UI (check `client/oxide-i18n`).
+
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
+---
+
 ## 🏗️ Architecture
 
 Oxide uses a **Hexagonal/Clean Architecture** within a Cargo Workspace to keep the business logic separated from the infrastructure.
@@ -94,7 +126,7 @@ graph LR
         api --> biz
         biz --> data
         biz --> wasm
-        wasm --> plugins{{WASM Plugins}}
+        wasm --x plugins{{WASM Plugins}}
 
         dom[oxide-domain]
 
@@ -103,9 +135,55 @@ graph LR
         wasm --> dom
         
     end
-
+    
     data --> redis[(Redis)]
     data --> db[(PostgreSQL)]
+```
 
-    %% Стилизация (по желанию)
-   
+### 🧩 Module Anatomy
+Each domain module (e.g., `course`, `user`) follows a strict internal structure to ensure separation of concerns:
+
+```mermaid
+    graph LR
+    subgraph Module [Domain Module Structure]
+        model[mod.rs: Core Entity]
+        vo[object.rs: Value Objects]
+        events[event.rs: Domain Events]
+        repo[repository.rs: Repository Traits]
+
+        subgraph Plugins [Plugin System]
+            registry[mod.rs: Registry]
+            hook[guard.rs / hook.rs / middleware.rs]
+        end
+    end
+
+    model --> vo
+    model --> events
+    repo -.-> model
+    hook --> model
+```
+### Centralized Event System 
+Oxide uses a unified DomainEvent enum that aggregates events from all sub-modules. This allows for a clean, decoupled way to handle cross-module side effects (e.g., sending an email when a user is registered).
+```mermaid
+    graph TD
+        subgraph Domain [oxide-domain]
+            direction TB
+            subgraph Modules [Domain Modules]
+                U[User Module]
+                C[Course Module]
+                S[Student Module]
+            end
+    
+            GlobalEvent{{event.rs: DomainEvent Enum}}
+    
+            U -- "UserEvent" --> GlobalEvent
+            C -- "CourseEvent" --> GlobalEvent
+            S -- "StudentEvent" --> GlobalEvent
+        end
+    
+        GlobalEvent ==> Bus[Internal Event Bus / Subscriber]
+```
+
+<div align="center">
+  Built with ❤️ and 🦀 by Suzdaltsev Denis
+</div>
