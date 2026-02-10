@@ -144,11 +144,19 @@ graph LR
     web -.-> shared_types
     api -.-> shared_types
 
+    subgraph External [External storage]
+        redis[(Redis)]
+        db[(PostgreSQL)]
+        ES[(Elasticsearch)]
+    end
+
     subgraph Server [Backend Engine]
         api[oxide-api]
+        subgraph IL [Infrastructure Layer]
+            inf[oxide-infrastructure]
+            data[oxide-data]
+        end
         biz[oxide-business]
-        inf[oxide-infrastructure]
-        data[oxide-data]
         wasm[oxide-wasm-provider]
         
         
@@ -170,8 +178,9 @@ graph LR
         
     end
     
-    data --> redis[(Redis)]
-    data --> db[(PostgreSQL)]
+    
+    
+    data --> External
 ```
 
 ### 🧩 Domain Module Anatomy
