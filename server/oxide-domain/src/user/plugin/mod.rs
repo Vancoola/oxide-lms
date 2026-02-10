@@ -13,6 +13,12 @@ pub struct UserExtensionRegistry {
     pub hooks: Vec<Arc<dyn PostRegistrationHook>>,
 }
 
+impl Default for UserExtensionRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UserExtensionRegistry {
     pub fn new() -> Self {
         Self {

@@ -9,6 +9,12 @@ use crate::error::DomainError;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 pub struct UserId(Uuid);
+impl Default for UserId {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UserId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())

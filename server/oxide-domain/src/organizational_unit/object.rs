@@ -6,6 +6,12 @@ use crate::organizational_unit::Unit;
 pub struct UnitTypeId(Uuid);
 
 
+impl Default for UnitTypeId {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UnitTypeId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())
@@ -18,6 +24,12 @@ impl UnitTypeId {
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct UnitId(Uuid);
+
+impl Default for UnitId {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl UnitId {
     pub fn new() -> Self {
@@ -52,6 +64,12 @@ impl ShortName {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct UnitPath(Vec<UnitId>);
 
+impl Default for UnitPath {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UnitPath {
     pub fn new() -> Self {
         Self(Vec::new())
@@ -66,6 +84,6 @@ impl UnitPath {
     }
 
     pub fn push(&mut self, id: &UnitId) {
-        self.0.push(id.clone());
+        self.0.push(*id);
     }
 }

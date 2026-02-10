@@ -89,10 +89,7 @@ impl Unit {
         created_at: OffsetDateTime,
         path: Vec<Uuid>
     ) -> Self {
-        let parent_id = match parent_id {
-            Some(parent_id) => Some(UnitId::load(&parent_id)),
-            None => None
-        };
+        let parent_id = parent_id.map(|parent_id| UnitId::load(&parent_id));
         Self {
             id: UnitId::load(id),
             name,
@@ -101,7 +98,7 @@ impl Unit {
             is_active,
             type_id: UnitTypeId::load(type_id),
             created_at,
-            path: UnitPath::load(path.iter().map(|u| UnitId::load(u)).collect()),
+            path: UnitPath::load(path.iter().map(UnitId::load).collect()),
         }
     }
 }

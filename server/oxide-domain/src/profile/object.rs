@@ -3,6 +3,12 @@ use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Copy)]
 pub struct ProfileId(Uuid);
+impl Default for ProfileId {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ProfileId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())

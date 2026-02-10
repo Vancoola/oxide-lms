@@ -2,3 +2,7 @@
 /oxide-web/dist
 .env
 /postgres_data
+.idea/
+target/
+**/dist/
+*.log
