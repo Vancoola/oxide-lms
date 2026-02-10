@@ -66,15 +66,15 @@ create table if not exists organizational_unit_types
 
 create table if not exists organizational_units
 (
-    id                uuid primary key default gen_random_uuid(),
+    id                uuid primary key                                        default gen_random_uuid(),
     name              varchar(255)                                   not null,
     short_name        varchar(100),
     parent_id         uuid references organizational_units (id),
     specific_metadata jsonb,
-    is_active         boolean          default true,
-    created_at        timestamptz      default now(),
+    is_active         boolean                                                 default true,
+    created_at        timestamptz                                             default now(),
     type_id           uuid references organizational_unit_types (id) not null,
-    path uuid[] not null default '{}'
+    path              uuid[]                                         not null default '{}'
 );
 
 create table if not exists specialities
@@ -91,8 +91,8 @@ create table if not exists profiles
 (
     id          uuid primary key                  default gen_random_uuid(),
     user_id     uuid                     not null references users (id) on delete cascade,
-    first_name  text                     default null,
-    last_name   text                     default null,
+    first_name  text                              default null,
+    last_name   text                              default null,
     middle_name text                              default null,
 
     is_active   bool                     not null default false,
@@ -291,7 +291,7 @@ create table if not exists grades
 create unique index if not exists idx_users_email on users (email);
 create unique index if not exists idx_profile_user on profiles (user_id);
 
-create index idx_units_path_gin on organizational_units using gin(path);
+create index idx_units_path_gin on organizational_units using gin (path);
 
 create index idx_lesson_series_term on lesson_series (term_id);
 create index idx_lesson_series_course on lesson_series (course_id);
@@ -309,7 +309,6 @@ create index idx_program_courses_course on program_courses (course_id);
 --
 --     end;
 -- $$ language plpgsql;
-
 
 
 create or replace function validate_student_unit_trigger() returns trigger as

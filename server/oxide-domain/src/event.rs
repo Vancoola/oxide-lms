@@ -14,3 +14,8 @@ pub enum GlobalEvent{
 pub trait EventPublisher: Send + Sync {
     async fn publish(&self, event: GlobalEvent) -> Result<(), DomainError>;
 }
+
+#[async_trait]
+pub trait EventHandler: Send + Sync {
+    async fn handle(&self, event: &GlobalEvent) -> Result<(), DomainError>;
+}

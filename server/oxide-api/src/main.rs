@@ -14,7 +14,7 @@ use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, Any, CorsLayer};
 use tracing::info;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use oxide_business::event::TokyoEventBus;
+use oxide_business::event::{EventDispatcher, TokyoEventBus};
 use oxide_data::PostgresContext;
 use crate::handler::auth::login;
 use crate::handler::user::me;
@@ -63,9 +63,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let pg_pool = PgPool::connect(connection_string.as_str()).await?;
     let (tokio_event_bus, rec) = TokyoEventBus::new();
+    let tokio_event_bus = Arc::new(tokio_event_bus);
 
     let app_state = Arc::new(AppState{
-        postgres_context: PostgresContext::new(pg_pool.clone(), Arc::new(tokio_event_bus)),
+        postgres_context: PostgresContext::new(pg_pool.clone(), tokio_event_bus),
+    });
+
+
+    let event_bus = EventDispatcher::new(Vec::new());
+    tokio::spawn(async move {
+        event_bus.run(rec).await;
     });
 
 

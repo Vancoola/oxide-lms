@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use tokio::sync::mpsc;
 use oxide_domain::error::DomainError;
-use oxide_domain::event::{EventPublisher, GlobalEvent};
+use oxide_domain::event::{EventHandler, EventPublisher, GlobalEvent};
 use oxide_domain::user::event::UserEvent;
 use crate::profile::handler::ProfileHandler;
 
@@ -26,39 +26,26 @@ impl EventPublisher for TokyoEventBus {
 }
 
 pub struct EventDispatcher {
-    profile_handler: Arc<ProfileHandler>,
+    subscribers: Vec<Arc<dyn EventHandler>>,
 }
 
 impl EventDispatcher {
-    pub fn new(profile_handler: Arc<ProfileHandler>) -> Self {
-        Self { profile_handler }
+    pub fn new(subscribers: Vec<Arc<dyn EventHandler>>) -> Self {
+        Self { subscribers }
     }
     pub async fn run(self, mut recv:  mpsc::UnboundedReceiver<GlobalEvent>) {
         tracing::info!("Event Dispatcher started");
-
         while let Some(event) = recv.recv().await {
-            let handler = Arc::clone(&self.profile_handler);
+            let subscribers = self.subscribers.clone();
+            //let event_arc = Arc::new(event);
             tokio::spawn(async move {
-                if let Err(e) = dispatch_event(event, handler).await {
-                    tracing::error!("Event dispatch error: {:?}", e);
+                for sub in subscribers {
+                    if let Err(e) = sub.handle(&event).await {
+                        tracing::error!("Error handling event: {:?}", e);
+                    }
                 }
             });
         }
     }
-}
-
-async fn dispatch_event(
-    event: GlobalEvent,
-    profile_handler: Arc<ProfileHandler>
-) -> Result<(), DomainError> {
-    match event {
-        GlobalEvent::User(user_event) => {
-            match user_event {
-                UserEvent::Created { user_id, email } => profile_handler.on_user_created(user_id, email).await?,
-            }
-        }
-        _ => {}
-    }
-    Ok(())
 }
 
