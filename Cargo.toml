@@ -91,6 +91,7 @@ wasmtime = "41.0.3"
 wit-bindgen = "0.52.0"
 
 [workspace.lints.clippy]
-pedantic = "warn"    # Включить строгие правила
-nursery = "warn"     # Включить экспериментальные правила
-unwrap_used = "deny" # Запретить использование .unwrap()
+pedantic = "warn"
+must_use_candidate = "allow"
+unwrap_used = "deny"
+perf = "warn"
