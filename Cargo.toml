@@ -89,3 +89,8 @@ utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 
 wasmtime = "41.0.3"
 wit-bindgen = "0.52.0"
+
+[workspace.lints.clippy]
+pedantic = "warn"    # Включить строгие правила
+nursery = "warn"     # Включить экспериментальные правила
+unwrap_used = "deny" # Запретить использование .unwrap()

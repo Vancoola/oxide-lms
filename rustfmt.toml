@@ -1,0 +1,11 @@
+# Максимальная ширина строки
+max_width = 100
+
+# Использовать маленькие блоки для импорта (группировка)
+imports_granularity = "Crate"
+
+# Переносить импорты на новые строки и сортировать их
+group_imports = "StdExternalCrate"
+
+# Удалять лишние пустые строки
+remove_nested_parens = true
