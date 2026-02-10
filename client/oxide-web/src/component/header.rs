@@ -1,6 +1,5 @@
-use leptos::prelude::{component, view, IntoView, ElementChild, ClassAttribute, OnAttribute, Show, Get, signal, Update, use_context, ChildrenFn};
+use leptos::prelude::{component, view, IntoView, ElementChild, ClassAttribute, OnAttribute, Get, signal, Update, use_context};
 use leptos_i18n::t;
-use leptos_router::hooks::{use_location, use_navigate};
 use oxide_i18n::oxide_i18n::i18n::use_i18n;
 use oxide_web_common::auth::AuthContext;
 

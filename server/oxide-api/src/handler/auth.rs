@@ -16,6 +16,6 @@ use crate::dto::auth::LoginRequest;
     description = "Logs in a user by verifying credentials and returns an access token. \
                  Requires valid email and password."
 )]
-pub async fn login(State(state): State<Arc<AppState>>,Json(payload): Json<LoginRequest>) -> impl IntoResponse {
+pub async fn login(State(_state): State<Arc<AppState>>,Json(_payload): Json<LoginRequest>) -> impl IntoResponse {
     (StatusCode::OK, Json(JwtToken{token: "access".to_string()}))
 }

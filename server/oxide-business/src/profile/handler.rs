@@ -13,7 +13,7 @@ impl ProfileHandler {
         Self { profile_repository }
     }
 
-    pub async fn on_user_created(&self, user_id: Uuid, email: String) -> Result<(), DomainError> {
+    pub async fn on_user_created(&self, user_id: Uuid, _email: String) -> Result<(), DomainError> {
         create_profile(self.profile_repository.as_ref(), user_id).await?;
         Ok(())
     }

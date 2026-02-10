@@ -31,11 +31,11 @@ impl ProfileRepository for PostgresContext {
         ))
     }
 
-    async fn get_profile_by_uid(&self, uid: Uuid) -> Result<Profile, DomainError> {
+    async fn get_profile_by_uid(&self, _uid: Uuid) -> Result<Profile, DomainError> {
         todo!()
     }
 
-    async fn exists_profile_by_uid(&self, uid: Uuid) -> Result<bool, DomainError> {
+    async fn exists_profile_by_uid(&self, _uid: Uuid) -> Result<bool, DomainError> {
         todo!()
     }
 
@@ -78,7 +78,7 @@ impl ProfileRepository for PostgresContext {
         Ok(())
     }
 
-    async fn update_profile(&self, profile: &Profile) -> Result<(), DomainError> {
+    async fn update_profile(&self, _profile: &Profile) -> Result<(), DomainError> {
         todo!()
     }
 }

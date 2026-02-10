@@ -19,7 +19,7 @@ pub struct User {
 
 #[component]
 pub fn AuthProvider(children: ChildrenFn) -> impl IntoView {
-    let user_resource = LocalResource::new(move || get_info());
+    let user_resource = LocalResource::new(get_info);
     let location = use_location();
     let navigate = use_navigate();
 

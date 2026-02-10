@@ -10,7 +10,7 @@ use axum::Router;
 use axum::routing::{get, post};
 use dotenvy::dotenv;
 use sqlx::PgPool;
-use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, Any, CorsLayer};
+use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
 use tracing::info;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;

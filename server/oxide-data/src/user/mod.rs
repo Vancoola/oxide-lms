@@ -89,7 +89,7 @@ impl UserRepository for PostgresContext {
             .map_err(to_domain_err)?;
 
         for event in user.pull_events() {
-            let _ = &self.event_bus.publish(GlobalEvent::User(event)).await?;
+            let () = &self.event_bus.publish(GlobalEvent::User(event)).await?;
         }
         Ok(())
     }

@@ -1,11 +1,8 @@
-use std::collections::HashMap;
 use std::sync::Arc;
 use async_trait::async_trait;
 use tokio::sync::mpsc;
 use oxide_domain::error::DomainError;
 use oxide_domain::event::{EventHandler, EventPublisher, GlobalEvent};
-use oxide_domain::user::event::UserEvent;
-use crate::profile::handler::ProfileHandler;
 
 pub struct TokyoEventBus {
     sender: mpsc::UnboundedSender<GlobalEvent>
