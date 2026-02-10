@@ -17,7 +17,7 @@ impl UserId {
         Self(uuid)
     }
     
-    pub fn as_uuid(&self) -> &Uuid {
+    pub fn as_ref(&self) -> &Uuid {
         &self.0
     }
 }

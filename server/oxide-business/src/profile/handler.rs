@@ -5,11 +5,11 @@ use oxide_domain::profile::repository::ProfileRepository;
 use crate::profile::service::create_profile;
 
 pub struct ProfileHandler {
-    profile_repository: Arc<dyn ProfileRepository>,
+    profile_repository: Arc<dyn ProfileRepository + Send + Sync>,
 }
 
 impl ProfileHandler {
-    pub fn new(profile_repository: Arc<dyn ProfileRepository>) -> Self {
+    pub fn new(profile_repository: Arc<dyn ProfileRepository + Send + Sync>) -> Self {
         Self { profile_repository }
     }
 

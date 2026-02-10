@@ -1,9 +1,9 @@
 use async_trait::async_trait;
 use oxide_domain::error::DomainError;
-use oxide_domain::profile::Profile;
-use oxide_domain::profile::repository::ProfileRepository;
 use oxide_domain::user::User;
 use sqlx::types::Uuid;
+use oxide_domain::event::GlobalEvent;
+use oxide_domain::user::object::Email;
 use oxide_domain::user::repository::UserRepository;
 use crate::{to_domain_err, PostgresContext};
 
@@ -30,13 +30,13 @@ impl UserRepository for PostgresContext {
         ))
     }
 
-    async fn get_user_by_email(&self, email: &str) -> Result<User, DomainError> {
+    async fn get_user_by_email(&self, email: &Email) -> Result<User, DomainError> {
         let record = sqlx::query!(
             r#"
             SELECT u.id, u.email, u.password, u.is_admin
             FROM users u
             WHERE u.email = $1"#,
-            email
+            email.as_str()
         )
             .fetch_one(&self.pool)
             .await
@@ -49,14 +49,20 @@ impl UserRepository for PostgresContext {
         ))
     }
 
-    async fn exists_by_email(&self, email: &str) -> Result<bool, DomainError> {
-        todo!()
+    async fn exists_by_email(&self, email: &Email) -> Result<bool, DomainError> {
+        let record = sqlx::query!("SELECT EXISTS (SELECT 1 FROM users WHERE email = $1)", email.as_str()).
+            fetch_one(&self.pool)
+            .await.map_err(to_domain_err)?;
+        match record.exists {
+            None => Ok(false),
+            Some(b) => Ok(b)
+        }
     }
 
     async fn create_user(&self, user: &User) -> Result<(), DomainError> {
         sqlx::query!(
             r#"INSERT INTO users (id, email, password, is_admin) VALUES ($1, $2, $3, $4)"#,
-            user.id.as_uuid(),
+            user.id.as_ref(),
             user.email.as_str(),
             user.password_hash.as_str(),
             user.is_admin
@@ -68,57 +74,31 @@ impl UserRepository for PostgresContext {
     }
 
     async fn create_user_and_publish(&self, user: &mut User) -> Result<(), DomainError> {
-        todo!()
+
+        //TODO: The Outbox pattern should be here
+
+        sqlx::query!(
+            r#"INSERT INTO users (id, email, password, is_admin) VALUES ($1, $2, $3, $4)"#,
+            user.id.as_ref(),
+            user.email.as_str(),
+            user.password_hash.as_str(),
+            user.is_admin
+        )
+            .execute(&self.pool)
+            .await
+            .map_err(to_domain_err)?;
+
+        for event in user.pull_events() {
+            let _ = &self.event_bus.publish(GlobalEvent::User(event)).await?;
+        }
+        Ok(())
     }
 
-    async fn get_password_by_email(&self, email: &str) -> Result<(Uuid, String), DomainError> {
-        let record = sqlx::query!(r#"SELECT id, password FROM users WHERE email = $1"#, &email)
+    async fn get_password_by_email(&self, email: &Email) -> Result<(Uuid, String), DomainError> {
+        let record = sqlx::query!(r#"SELECT id, password FROM users WHERE email = $1"#, email.as_str())
             .fetch_one(&self.pool)
             .await
             .map_err(to_domain_err)?;
         Ok((record.id, record.password))
-    }
-}
-
-#[async_trait]
-impl ProfileRepository for PostgresContext {
-    async fn get_profile_by_id(&self, id: Uuid) -> Result<Profile, DomainError> {
-        let record = sqlx::query!(
-            r#"
-            SELECT *
-            FROM profiles
-            WHERE id=$1
-            "#,
-            id
-        )
-            .fetch_one(&self.pool)
-            .await
-            .map_err(to_domain_err)?;
-        Ok(Profile::load(
-            record.id,
-            record.user_id,
-            record.first_name,
-            record.last_name,
-            record.middle_name,
-            record.created_at,
-            record.updated_at,
-            record.is_active,
-        ))
-    }
-
-    async fn get_profile_by_uid(&self, uid: Uuid) -> Result<Profile, DomainError> {
-        todo!()
-    }
-
-    async fn exists_profile_by_uid(&self, uid: Uuid) -> Result<bool, DomainError> {
-        todo!()
-    }
-
-    async fn create_profile(&self, profile: &Profile) -> Result<Uuid, DomainError> {
-        todo!()
-    }
-
-    async fn update_profile(&self, profile: &Profile) -> Result<Uuid, DomainError> {
-        todo!()
     }
 }

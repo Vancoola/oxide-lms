@@ -91,8 +91,8 @@ create table if not exists profiles
 (
     id          uuid primary key                  default gen_random_uuid(),
     user_id     uuid                     not null references users (id) on delete cascade,
-    first_name  text                     null,
-    last_name   text                     null,
+    first_name  text                     default null,
+    last_name   text                     default null,
     middle_name text                              default null,
 
     is_active   bool                     not null default false,

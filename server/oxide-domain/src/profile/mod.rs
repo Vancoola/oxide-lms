@@ -1,20 +1,22 @@
 pub mod repository;
 pub mod event;
+pub mod object;
 
 use crate::error::DomainError;
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use uuid::Uuid;
 use crate::profile::event::ProfileEvent;
+use crate::profile::object::{Name, ProfileId};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Profile {
-    pub id: Uuid,
+    pub id: ProfileId,
     pub user_id: Uuid,
 
-    pub first_name: Option<String>,
-    pub last_name: Option<String>,
-    pub middle_name: Option<String>,
+    pub first_name: Name,
+    pub last_name: Name,
+    pub middle_name: Name,
 
     pub is_activate: bool,
 
@@ -26,12 +28,12 @@ pub struct Profile {
 
 impl Profile {
     pub fn new(user_id: Uuid) -> Result<Self, DomainError> {
-        let mut profile = Self {
-            id: Uuid::new_v4(),
+        let profile = Self {
+            id: ProfileId::new(),
             user_id,
-            first_name: None,
-            last_name: None,
-            middle_name: None,
+            first_name: Name::none(),
+            last_name: Name::none(),
+            middle_name: Name::none(),
             created_at: OffsetDateTime::now_utc(),
             updated_at: OffsetDateTime::now_utc(),
             is_activate: false,
@@ -51,11 +53,11 @@ impl Profile {
         is_activate: bool,
     ) -> Self {
         Self {
-            id,
+            id: ProfileId::load(id),
             user_id,
-            first_name,
-            last_name,
-            middle_name,
+            first_name: Name::some(first_name),
+            last_name: Name::some(last_name),
+            middle_name: Name::some(middle_name),
             created_at,
             updated_at,
             is_activate,
@@ -65,17 +67,13 @@ impl Profile {
 
     pub fn update(
         &mut self,
-        first_name: &str,
-        last_name: &str,
-        middle_name: Option<String>,
+        first_name: Name,
+        last_name: Name,
+        middle_name: Name,
     ) -> Result<(), DomainError> {
-        self.first_name = Some(first_name.to_string());
-        self.last_name = Some(last_name.to_string());
-        if let Some(middle_name) = middle_name {
-            self.middle_name = Some(middle_name.to_string());
-        } else {
-            self.middle_name = None;
-        }
+        self.first_name = first_name;
+        self.last_name = last_name;
+        self.middle_name = middle_name;
         self.updated_at = OffsetDateTime::now_utc();
         self.is_activate = true;
         Ok(())

@@ -1,16 +1,20 @@
+use std::sync::Arc;
 use oxide_domain::error::DomainError;
+use oxide_domain::event::EventPublisher;
 
 pub mod error;
 pub mod user;
+mod profile;
 
 #[derive(Clone)]
 pub struct PostgresContext {
     pool: sqlx::PgPool,
+    event_bus: Arc<dyn EventPublisher>
 }
 
 impl PostgresContext {
-    pub fn new(pool: sqlx::PgPool) -> Self {
-        Self { pool }
+    pub fn new(pool: sqlx::PgPool, event_bus: Arc<dyn EventPublisher>) -> Self {
+        Self { pool, event_bus }
     }
 }
 

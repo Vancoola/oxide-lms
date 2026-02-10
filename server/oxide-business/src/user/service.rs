@@ -16,7 +16,7 @@ pub async fn register_user(
     for guard in &plugin_registry.guards {
         guard.execute(&email).await?;
     }
-    if repo.exists_by_email(email.as_str()).await? {
+    if repo.exists_by_email(&email).await? {
         return Err(DomainError::AlreadyExists);
     }
     let hash = hasher.hash(&password)?;
@@ -45,7 +45,7 @@ pub async fn register_admin<R: UserRepository, H: PasswordHasher>(
     for guard in &plugin_registry.guards {
         guard.execute(&email).await?;
     }
-    if repo.exists_by_email(email.as_str()).await? {
+    if repo.exists_by_email(&email).await? {
         return Err(DomainError::AlreadyExists);
     }
     let hash = hasher.hash(&password)?;

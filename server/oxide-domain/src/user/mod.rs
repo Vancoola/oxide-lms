@@ -33,7 +33,7 @@ impl User {
             events: Vec::new(),
         };
         user.events.push(Created {
-            user_id: *user.id.as_uuid(),
+            user_id: *user.id.as_ref(),
             email: user.email.as_str().into(),
         });
         user
@@ -48,7 +48,7 @@ impl User {
             events: Vec::new(),
         };
         user.events.push(Created {
-            user_id: *user.id.as_uuid(),
+            user_id: *user.id.as_ref(),
             email: user.email.as_str().into(),
         });
         user

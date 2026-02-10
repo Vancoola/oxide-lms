@@ -2,6 +2,7 @@ use oxide_domain::error::DomainError;
 use oxide_domain::profile::Profile;
 use oxide_domain::profile::repository::ProfileRepository;
 use uuid::Uuid;
+use oxide_domain::profile::object::Name;
 
 pub async fn create_profile(
     repo: &dyn ProfileRepository,
@@ -18,9 +19,9 @@ pub async fn create_profile(
 pub async fn update_profile(
     repo: &dyn ProfileRepository,
     user_id: Uuid,
-    first_name: &str,
-    last_name: &str,
-    middle_name: Option<String>,
+    first_name: Name,
+    last_name: Name,
+    middle_name: Name,
 ) -> Result<Profile, DomainError> {
     if !repo.exists_profile_by_uid(user_id).await? {
         return Err(DomainError::NotFound);
