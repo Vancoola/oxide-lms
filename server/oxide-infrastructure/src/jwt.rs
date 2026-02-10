@@ -1,9 +1,9 @@
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use crate::error::BusinessError;
+use crate::error::InfrastructureError;
 
-pub fn generate_jwt(user_id: &Uuid, secret_key: &str) -> Result<String, BusinessError> {
+pub fn generate_jwt(user_id: &Uuid, secret_key: &str) -> Result<String, InfrastructureError> {
     let header = Header::new(Algorithm::HS256);
     Ok(encode(
         &header,

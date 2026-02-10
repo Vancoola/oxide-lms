@@ -6,9 +6,9 @@ use oxide_domain::user::plugin::UserExtensionRegistry;
 use oxide_domain::user::repository::UserRepository;
 use oxide_domain::user::User;
 
-pub async fn register_user<R: UserRepository, H: PasswordHasher>(
-    repo: &R,
-    hasher: &H,
+pub async fn register_user(
+    repo: &dyn UserRepository,
+    hasher: &dyn PasswordHasher,
     plugin_registry: &UserExtensionRegistry,
     email: Email,
     password: RawPassword,

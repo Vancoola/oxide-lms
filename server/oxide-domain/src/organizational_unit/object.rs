@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use crate::error::DomainError;
 use crate::organizational_unit::Unit;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]

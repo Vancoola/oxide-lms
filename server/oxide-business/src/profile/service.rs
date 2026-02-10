@@ -1,10 +1,10 @@
-use crate::error::DomainError;
-use crate::profile::Profile;
-use crate::profile::repository::ProfileRepository;
+use oxide_domain::error::DomainError;
+use oxide_domain::profile::Profile;
+use oxide_domain::profile::repository::ProfileRepository;
 use uuid::Uuid;
 
-pub async fn create_profile<R: ProfileRepository>(
-    repo: &R,
+pub async fn create_profile(
+    repo: &dyn ProfileRepository,
     user_id: Uuid,
 ) -> Result<Profile, DomainError> {
     if repo.exists_profile_by_uid(user_id).await? {
@@ -15,8 +15,8 @@ pub async fn create_profile<R: ProfileRepository>(
     Ok(profile)
 }
 
-pub async fn update_profile<R: ProfileRepository>(
-    repo: &R,
+pub async fn update_profile(
+    repo: &dyn ProfileRepository,
     user_id: Uuid,
     first_name: &str,
     last_name: &str,

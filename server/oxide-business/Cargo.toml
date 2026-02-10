@@ -5,7 +5,6 @@ edition.workspace = true
 
 [dependencies]
 thiserror.workspace = true
-jsonwebtoken.workspace = true
 uuid.workspace = true
 serde.workspace = true
 

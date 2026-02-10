@@ -30,6 +30,7 @@ members = [
     "server/oxide-domain",
     "server/oxide-wasm-provider",
     "server/oxide-macros",
+    "server/oxide-infrastructure",
     "client/oxide-admin",
     "client/oxide-dean",
     "client/oxide-i18n",

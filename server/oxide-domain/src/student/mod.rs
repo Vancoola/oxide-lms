@@ -1,5 +1,4 @@
 pub mod repository;
-pub mod service;
 pub mod event;
 
 use crate::error::DomainError;

@@ -1,5 +1,4 @@
 pub mod repository;
-pub mod service;
 pub mod event;
 
 use crate::error::DomainError;
@@ -27,7 +26,7 @@ pub struct Profile {
 
 impl Profile {
     pub fn new(user_id: Uuid) -> Result<Self, DomainError> {
-        Ok(Self {
+        let mut profile = Self {
             id: Uuid::new_v4(),
             user_id,
             first_name: None,
@@ -37,7 +36,8 @@ impl Profile {
             updated_at: OffsetDateTime::now_utc(),
             is_activate: false,
             events: Vec::new(),
-        })
+        };
+        Ok(profile)
     }
 
     pub fn load(

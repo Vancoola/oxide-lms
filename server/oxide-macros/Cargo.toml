@@ -11,3 +11,7 @@ proc-macro = true
 [dependencies]
 syn.workspace = true
 quote.workspace = true
+zeroize = {workspace = true, optional = true}
+
+[features]
+default = []

@@ -12,6 +12,7 @@ thiserror.workspace = true
 email_address.workspace = true
 
 zeroize.workspace = true
+oxide-macros = {path = "../oxide-macros", features = ["zeroize"]}
 
 [dev-dependencies]
 mockall.workspace = true

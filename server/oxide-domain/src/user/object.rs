@@ -20,7 +20,6 @@ impl UserId {
     pub fn as_uuid(&self) -> &Uuid {
         &self.0
     }
-    
 }
 
 
@@ -46,7 +45,7 @@ impl Email {
     }
 }
 
-#[derive(Clone, Zeroize, ZeroizeOnDrop)]
+#[derive(Clone, Serialize, Zeroize, ZeroizeOnDrop)]
 pub struct RawPassword(String);
 impl RawPassword {
     pub fn new(password: String) -> Result<Self, DomainError> {

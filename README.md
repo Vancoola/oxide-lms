@@ -91,21 +91,24 @@ Oxide is built as a **Modular Monolith**. This means:
 ```text
 .
 ├── client/                 # Frontend applications & web resources
-│   ├── oxide-web/          # Main Student Portal (Leptos SPA)
-│   ├── oxide-admin/        # System Administration dashboard
+│   ├── oxide-web/          # Main Student Portal (Leptos CSR/SPA)
+│   ├── oxide-admin/        # System Administration dashboard for IT-staff
 │   ├── oxide-dean/         # Educational management & Dean's office UI
 │   ├── oxide-ui/           # Shared Design System (Components, Tailwind, Styles)
-│   ├── oxide-web-common/   # Common frontend logic, hooks, and utilities
-│   └── oxide-i18n/         # Localization engine and translation files
+│   ├── oxide-web-common/   # Common frontend logic, API-fetchers, and hooks
+│   └── oxide-i18n/         # Localization engine and translation resources
 ├── server/                 # Backend services & business logic
-│   ├── oxide-api/          # Entry point: Axum routes, middleware, and OpenAPI docs
-│   ├── oxide-business/     # Service layer: Orchestrates use-cases and workflows
-│   ├── oxide-domain/       # The Core: Entities, Repository traits, and Domain Events
-│   ├── oxide-data/         # Infrastructure: SQLx implementations & Persistence logic
-│   └── oxide-wasm-provider/# Plugin Engine: Wasmtime host and runtime isolation
-├── oxide-shared-types/     # Common DTOs and types shared between Client & Server
-├── migrations/             # SQLx migration files for PostgreSQL
-└── Cargo.toml              # Workspace manifest and global dependencies     
+│   ├── oxide-api/          # Composition Root: Axum routes, Swagger UI, and App state
+│   ├── oxide-business/     # Application layer: Use-case orchestration and Handlers
+│   ├── oxide-domain/       # The Core: Pure Entities, Value Objects, and Event definitions
+│   ├── oxide-infrastructure/ # Technical layer: Crypto, JWT, Mailers, and External Gateways
+│   ├── oxide-data/         # Persistence layer: SQLx Repository implementations
+│   ├── oxide-wasm-provider/# Plugin System: Wasmtime host and runtime isolation logic
+│   └── oxide-macros/       # Procedural macros for boilerplate reduction (DTOs, etc.)
+├── oxide-shared-types/     # Unified DTOs and types for Client-Server synchronization
+├── migrations/             # Database schema evolution (SQLx/PostgreSQL)
+├── compose.yaml            # Local development environment (DB, Redis, etc.)
+└── Cargo.toml              # Workspace manifest and centralized dependency management 
 ```
 </details>
 
@@ -144,18 +147,24 @@ graph LR
     subgraph Server [Backend Engine]
         api[oxide-api]
         biz[oxide-business]
+        inf[oxide-infrastructure]
         data[oxide-data]
         wasm[oxide-wasm-provider]
         
         
         api --> biz
+        biz --> inf
         biz --> data
         biz --> wasm
         wasm --x plugins{{WASM Plugins}}
 
         dom[oxide-domain]
-
+        macros[oxide-macros]
+        
+        dom ==> macros
+        
         data --> dom
+        inf --> dom
         biz --> dom
         wasm --> dom
         
@@ -165,7 +174,7 @@ graph LR
     data --> db[(PostgreSQL)]
 ```
 
-### 🧩 Module Anatomy
+### 🧩 Domain Module Anatomy
 Each domain module (e.g., `course`, `user`) follows a strict internal structure to ensure separation of concerns:
 
 ```mermaid
@@ -208,8 +217,46 @@ Oxide uses a unified DomainEvent enum that aggregates events from all sub-module
     
         GlobalEvent ==> Bus[Internal Event Bus / Subscriber]
 ```
----
+### Business Module Anatomy
+Each business module (e.g., `course`, `user`) follows a strict internal structure to ensure separation of concerns:
+```mermaid
+    graph LR
+    subgraph Module [Business Module Structure]
+        model[mod.rs: Core Entity]
+        H[handler.rs: Event Reactions]
+        S[service.rs: Use Cases / Logic]
+        P[ports.rs: External Interfaces]
+    end
+    model --> H
+    model --> S
+    model --> P
+```
 
+### Cross-Layer Orchestration
+The Business layer acts as the central mediator between pure Domain logic and technical Infrastructure, enforcing the `Dependency Inversion` principle.
+```mermaid
+    graph LR
+        subgraph BusinessModule [Business Module]
+            S[service.rs: Use Cases / Logic]
+            P[ports.rs: External Interfaces]
+            H[handler.rs: Event Reactions]
+        end
+    
+        subgraph Domain [Domain Layer]
+            E[mod.rs: Entities / VO]
+        end
+    
+        subgraph Infra [Infrastructure Layer]
+            Impl[Gateways / Repos Impl]
+        end
+        
+        Impl -- Implements --> P
+        H --> S
+        S --> P
+        S --> E
+```
+
+---
 ## 🛠️ Getting Started
 
 ### Prerequisites

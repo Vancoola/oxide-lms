@@ -1,10 +1,10 @@
 use uuid::Uuid;
-use crate::error::DomainError;
-use crate::student::repository::StudentRepository;
-use crate::student::{Student, TrainingStatus};
+use oxide_domain::error::DomainError;
+use oxide_domain::student::repository::StudentRepository;
+use oxide_domain::student::{Student, TrainingStatus};
 
-pub async fn add_student<R: StudentRepository>(
-    repo: &R,
+pub async fn add_student(
+    repo: &dyn StudentRepository,
     user_id: Uuid,
     student_id: Option<String>,
     status: TrainingStatus,
