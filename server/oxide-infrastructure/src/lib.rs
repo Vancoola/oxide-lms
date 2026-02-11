@@ -1,2 +1,3 @@
 pub mod jwt;
-mod error;
+pub mod error;
+pub mod auth;

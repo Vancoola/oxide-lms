@@ -69,6 +69,7 @@ tracing = "0.1.44"
 tracing-subscriber = "0.3.22"
 validator = { version = "0.20.0", features = ["derive"] }
 thiserror = "2.0.18"
+anyhow = "1.0.101"
 mockall = "0.14.0"
 rstest = "0.26.1"
 
@@ -79,7 +80,7 @@ tower-http = { version = "0.6.8", features = ["cors"] }
 
 
 aes-gcm = "0.10.3"
-argon2 = "0.5.3"
+argon2 = {version = "0.5.3", features = ["password-hash", "std", "zeroize"]}
 zeroize = { version = "1.8.2", features = ["derive"] }
 jsonwebtoken = "10.3.0"
 

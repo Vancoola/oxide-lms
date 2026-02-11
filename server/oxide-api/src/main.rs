@@ -3,6 +3,7 @@ mod openapi;
 mod user;
 mod state;
 mod boot;
+mod error;
 
 use crate::openapi::ApiDoc;
 use crate::user::auth::{auth_router, login};
@@ -23,14 +24,15 @@ use std::env;
 use std::sync::Arc;
 use std::time::Duration;
 use tower_http::cors::{AllowHeaders, AllowMethods, AllowOrigin, CorsLayer};
-use tracing::info;
+use tracing::{error, info, warn};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use crate::boot::create_app;
+use crate::error::AppError;
 use crate::state::AppState;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), AppError> {
     tracing_subscriber::fmt::init();
     log_startup_banner();
     dotenv().ok();
@@ -45,6 +47,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tokio::spawn(async move {
         event_bus.run(rec).await;
     });
+
+    if let Err(e) = admin_register(app_state.clone()).await {
+        warn!("Failed to register admin: {}", e);
+    }
 
     create_app(app_state).await?;
     Ok(())
@@ -71,14 +77,11 @@ fn log_startup_banner() {
     info!("--------------------------------------------------");
 }
 
-async fn admin_register(
-    repo: &dyn UserRepository,
-    hasher: &dyn PasswordHasher,
-    plugin_registry: &UserExtensionRegistry,
-) -> Result<(), Box<dyn std::error::Error>> {
+async fn admin_register(app_state: Arc<AppState>) -> anyhow::Result<()> {
     let need_reg = env::var("ADMIN_REGISTER").map(|_| true).unwrap_or(false);
 
     if !need_reg {
+        info!("The admin will not register");
         return Ok(());
     }
 
@@ -91,7 +94,7 @@ async fn admin_register(
 
     let email = Email::new(env_email)?;
     let password = RawPassword::new(env_password)?;
-
-    register_admin(repo, hasher, plugin_registry, email, password).await?;
+    register_admin(app_state.user_repo.as_ref(), app_state.password_hasher.as_ref(), app_state.user_extension_registry.as_ref(), email, password).await?;
+    info!("The admin has been registered");
     Ok(())
 }

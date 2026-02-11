@@ -9,7 +9,11 @@ license.workspace = true
 workspace = true
 
 [dependencies]
+oxide-domain = {path="../oxide-domain"}
+
 jsonwebtoken.workspace = true
 serde.workspace = true
 uuid.workspace = true
 thiserror.workspace = true
+
+argon2.workspace = true

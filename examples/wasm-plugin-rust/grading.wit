@@ -1,0 +1,7 @@
+interface grading-provider {
+    record score {
+        points: f32,
+        max-points: f32
+    }
+    calculate: func(attempt: string) -> score
+}

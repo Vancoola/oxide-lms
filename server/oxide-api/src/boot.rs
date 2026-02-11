@@ -11,7 +11,7 @@ use crate::state::AppState;
 use crate::user::auth::auth_router;
 use crate::user::user_router;
 
-pub async fn create_app(app_state: Arc<AppState>) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn create_app(app_state: Arc<AppState>) -> anyhow::Result<()> {
     let cors = CorsLayer::new()
         .allow_origin(AllowOrigin::list([
             "http://localhost:8080".parse()?,
