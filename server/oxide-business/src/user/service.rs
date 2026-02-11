@@ -35,9 +35,9 @@ pub async fn register_user(
     Ok(user)
 }
 
-pub async fn register_admin<R: UserRepository, H: PasswordHasher>(
-    repo: &R,
-    hasher: &H,
+pub async fn register_admin(
+    repo: &dyn UserRepository,
+    hasher: &dyn PasswordHasher,
     plugin_registry: &UserExtensionRegistry,
     email: Email,
     password: RawPassword,

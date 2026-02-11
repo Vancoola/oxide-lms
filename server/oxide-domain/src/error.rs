@@ -4,9 +4,9 @@ use thiserror::Error;
 pub enum DomainError {
     #[error("Invalid input value: {0}")]
     InvalidInputValue(String),
-    #[error("user already exists")]
+    #[error("User already exists")]
     AlreadyExists,
-    #[error("user not found")]
+    #[error("User not found")]
     NotFound,
     #[error("Internal infrastructure error: {0}")]
     Infrastructure(String),

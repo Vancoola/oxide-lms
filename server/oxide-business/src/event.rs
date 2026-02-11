@@ -46,3 +46,50 @@ impl EventDispatcher {
     }
 }
 
+
+#[cfg(test)]
+mod test {
+    use mockall::mock;
+    use rstest::rstest;
+    use uuid::Uuid;
+    use oxide_domain::user::event::UserEvent;
+    use super::*;
+
+    #[rstest]
+    #[tokio::test]
+    async fn publish_event_success(){
+        let (bus, mut recv) = TokyoEventBus::new();
+        bus.publish(GlobalEvent::User(UserEvent::Created {user_id: Uuid::new_v4(), email: "test@email.com".to_string()})).await.unwrap();
+        let one_ev = recv.recv().await;
+        assert!(one_ev.is_some());
+        one_ev.unwrap();
+    }
+
+    mock! {
+        pub Handler {}
+        #[async_trait]
+        impl EventHandler for Handler {
+            async fn handle(&self, event: &GlobalEvent) -> Result<(), DomainError>;
+        }
+    }
+
+    #[rstest]
+    #[tokio::test]
+    async fn dispatcher_should_call_subscribers() {
+        let (bus, recv) = TokyoEventBus::new();
+        let mut mock_handler = MockHandler::new();
+
+        mock_handler.expect_handle()
+            .times(1)
+            .returning(|_| Ok(()));
+
+        let dispatcher = EventDispatcher::new(vec![Arc::new(mock_handler)]);
+
+        tokio::spawn(async move {
+            dispatcher.run(recv).await;
+        });
+
+        bus.publish(GlobalEvent::User(UserEvent::Created { user_id: Uuid::new_v4(), email: "test@email.com".to_string() })).await.unwrap();
+        tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+    }
+}

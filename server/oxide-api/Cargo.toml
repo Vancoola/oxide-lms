@@ -24,4 +24,5 @@ utoipa-swagger-ui.workspace = true
 oxide-data = {path="../oxide-data"}
 oxide-business = {path = "../oxide-business"}
 oxide-shared-types = {path = "../../oxide-shared-types"}
+oxide-domain = {path = "../oxide-domain"}
 uuid = { version = "1.20.0", features = ["v4"] }

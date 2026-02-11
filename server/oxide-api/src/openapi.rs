@@ -1,7 +1,7 @@
 use utoipa::{Modify, OpenApi};
 use utoipa::openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme};
-use crate::handler::auth::{__path_login};
-use crate::handler::user::{__path_me};
+use crate::user::auth::{__path_login};
+use crate::user::{__path_me};
 use crate::dto::auth::{LoginRequest};
 
 #[derive(OpenApi)]
@@ -24,17 +24,13 @@ use crate::dto::auth::{LoginRequest};
         (name="admin", description="Административный функционал"),
     ),
     info(
-        title="Oxide",
+        title="Oxide-LMS API",
         version="0.2.0",
         description="Документация по LMS",
         license(
-            name="EULA лицензия",
-            url="https://axion-tech.ru/privacy-policy/",
+            name="Apache-2.0",
+            url="https://www.apache.org/licenses/",
         ),
-        contact(
-            name="Поддержка",
-            email="support@axion-tech.ru"
-        )
     ),
     modifiers(&SecurityAddon)
 )]

@@ -1,11 +1,17 @@
 use std::sync::Arc;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::Json;
+use axum::{Json, Router};
 use axum::response::IntoResponse;
+use axum::routing::post;
 use oxide_shared_types::auth::JwtToken;
 use crate::AppState;
 use crate::dto::auth::LoginRequest;
+
+
+pub fn auth_router() -> Router<Arc<AppState>>{
+    Router::new().route("/login", post(login))
+}
 
 #[utoipa::path(
     context_path="/api/v1/auth",

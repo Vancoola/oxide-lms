@@ -9,12 +9,11 @@ mod profile;
 #[derive(Clone)]
 pub struct PostgresContext {
     pool: sqlx::PgPool,
-    event_bus: Arc<dyn EventPublisher>
 }
 
 impl PostgresContext {
-    pub fn new(pool: sqlx::PgPool, event_bus: Arc<dyn EventPublisher>) -> Self {
-        Self { pool, event_bus }
+    pub fn new(pool: sqlx::PgPool) -> Self {
+        Self { pool }
     }
 }
 

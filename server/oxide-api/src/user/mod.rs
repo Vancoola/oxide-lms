@@ -1,8 +1,17 @@
+pub mod auth;
+
+use std::sync::Arc;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
-use axum::Json;
+use axum::{Json, Router};
+use axum::routing::get;
 use uuid::Uuid;
+use crate::AppState;
 use crate::dto::user::UserInfo;
+
+pub fn user_router() -> Router<Arc<AppState>> {
+    Router::new().route("/me", get(me))
+}
 
 #[utoipa::path(
     context_path="/api/v1/users",
