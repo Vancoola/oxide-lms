@@ -6,3 +6,4 @@ pub mod profile;
 pub mod student;
 pub mod organizational_unit;
 pub mod event;
+mod chat;

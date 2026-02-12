@@ -19,10 +19,7 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub async fn new() -> Result<Self, AppError> {
-        let connection_string =
-            env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env or system env");
-        let pg_pool = PgPool::connect(connection_string.as_str()).await?;
+    pub async fn new(pg_pool: PgPool) -> Result<Self, AppError> {
         let context = Arc::new(PostgresContext::new(pg_pool.clone()));
         Ok(Self{
             user_repo: context.clone(),

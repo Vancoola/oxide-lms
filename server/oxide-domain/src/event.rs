@@ -5,7 +5,7 @@ use crate::profile::event::ProfileEvent;
 use crate::student::event::StudentEvent;
 use crate::user::event::UserEvent;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum GlobalEvent{
     User(UserEvent),
     Profile(ProfileEvent),

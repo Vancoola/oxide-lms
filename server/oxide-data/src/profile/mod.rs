@@ -35,8 +35,14 @@ impl ProfileRepository for PostgresContext {
         todo!()
     }
 
-    async fn exists_profile_by_uid(&self, _uid: Uuid) -> Result<bool, DomainError> {
-        todo!()
+    async fn exists_profile_by_uid(&self, uid: Uuid) -> Result<bool, DomainError> {
+        let record = sqlx::query!("SELECT EXISTS(SELECT * FROM profiles WHERE id = $1)", uid)
+            .fetch_one(&self.pool)
+            .await.map_err(to_domain_err)?;
+        match record.exists {
+            None => {Ok(false)},
+            Some(b) => {Ok(b)}
+        }
     }
 
     async fn create_profile(&self, profile: &Profile) -> Result<(), DomainError> {

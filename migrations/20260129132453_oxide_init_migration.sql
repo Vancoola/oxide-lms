@@ -289,14 +289,15 @@ create table if not exists grades
 );
 
 
-create table outbox_events(
-    id uuid primary key default gen_random_uuid(),
-    event_type text not null,
-    payload jsonb not null,
-    created_at timestamptz not null default now(),
+create table outbox_events
+(
+    id           uuid primary key     default gen_random_uuid(),
+    event_type   text        not null,
+    payload      jsonb       not null,
+    created_at   timestamptz not null default now(),
     processed_at timestamptz,
-    retry_count int not null default 0,
-    last_error text
+    retry_count  int         not null default 0,
+    last_error   text
 );
 CREATE INDEX idx_outbox_unprocessed ON outbox_events (created_at)
     WHERE processed_at IS NULL;
@@ -316,7 +317,19 @@ create index idx_staff_user on staff (user_id);
 create index idx_program_courses_program on program_courses (program_id);
 create index idx_program_courses_course on program_courses (course_id);
 
+create or replace function notify_outbox_event() returns trigger as
+$$
+begin
+    perform pg_notify('outbox_event', new.payload::text);
+    return new;
+end;
+$$ language plpgsql;
 
+create trigger outbox_events_notify_trigger
+    after insert or update
+    on outbox_events
+    for each row
+execute function notify_outbox_event();
 
 -- create or replace function update_unit_path() returns trigger as $$
 --     begin
