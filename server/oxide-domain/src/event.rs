@@ -1,9 +1,11 @@
 use async_trait::async_trait;
+use serde::{Deserialize, Serialize};
 use crate::error::DomainError;
 use crate::profile::event::ProfileEvent;
 use crate::student::event::StudentEvent;
 use crate::user::event::UserEvent;
 
+#[derive(Serialize, Deserialize)]
 pub enum GlobalEvent{
     User(UserEvent),
     Profile(ProfileEvent),

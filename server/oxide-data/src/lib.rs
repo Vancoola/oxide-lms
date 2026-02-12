@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use oxide_domain::error::DomainError;
 use oxide_domain::event::EventPublisher;
+use oxide_domain::user::event::UserEvent;
 
 pub mod error;
 pub mod user;
@@ -14,6 +15,17 @@ pub struct PostgresContext {
 impl PostgresContext {
     pub fn new(pool: sqlx::PgPool) -> Self {
         Self { pool }
+    }
+    pub async fn outbox_watch(&self) -> Result<Vec<UserEvent>, DomainError> {
+        let records = sqlx::query!("SELECT payload FROM outbox_events").fetch_all(&self.pool).await.map_err(to_domain_err)?;
+        let event: Vec<UserEvent> = records
+            .into_iter()
+            .map(|row| {
+                serde_json::from_value::<UserEvent>(row.payload)
+                    .expect("Mapping failed")
+            })
+            .collect();
+        Ok(event)
     }
 }
 

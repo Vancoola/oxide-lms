@@ -15,5 +15,10 @@ jsonwebtoken.workspace = true
 serde.workspace = true
 uuid.workspace = true
 thiserror.workspace = true
+tokio.workspace = true
+sqlx.workspace = true
+serde_json.workspace = true
 
 argon2.workspace = true
+async-trait.workspace = true
+log = "0.4.29"

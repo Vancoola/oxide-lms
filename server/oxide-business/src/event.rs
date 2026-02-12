@@ -6,6 +6,7 @@ use oxide_domain::event::{EventHandler, EventPublisher, GlobalEvent};
 
 pub struct TokyoEventBus {
     sender: mpsc::UnboundedSender<GlobalEvent>
+    //source:
 }
 
 impl TokyoEventBus {
@@ -13,6 +14,11 @@ impl TokyoEventBus {
         let (sender, receiver) = mpsc::unbounded_channel();
         (Self { sender }, receiver)
     }
+
+    // pub async fn watch(self) {
+    //     tracing::info!("Event bus run");
+    // }
+
 }
 
 #[async_trait]

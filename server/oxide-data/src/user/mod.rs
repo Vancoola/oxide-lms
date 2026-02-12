@@ -1,11 +1,11 @@
 use crate::{PostgresContext, to_domain_err};
 use async_trait::async_trait;
 use oxide_domain::error::DomainError;
-use oxide_domain::event::GlobalEvent;
 use oxide_domain::user::User;
 use oxide_domain::user::object::Email;
 use oxide_domain::user::repository::UserRepository;
 use sqlx::types::Uuid;
+use oxide_domain::event::GlobalEvent;
 
 #[async_trait]
 impl UserRepository for PostgresContext {
@@ -90,7 +90,7 @@ impl UserRepository for PostgresContext {
         .map_err(to_domain_err)?;
 
         for event in user.pull_events() {
-            let payload = serde_json::to_value(&event)
+            let payload = serde_json::to_value(GlobalEvent::User(event))
                 .map_err(|e| DomainError::Infrastructure(e.to_string()))?;
             let event_type = "UserEvent";
             sqlx::query!(
