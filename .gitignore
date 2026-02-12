@@ -7,3 +7,5 @@ target/
 **/dist/
 *.log
 /.sqlx/
+/Cargo.lock
+/client/oxide-i18n/locales/mod.rs
