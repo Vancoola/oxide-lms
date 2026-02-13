@@ -60,7 +60,7 @@ create table if not exists organizational_unit_types
 (
     id                uuid primary key default gen_random_uuid(),
     code              text unique  not null, -- university, faculty, group
-    name              varchar(255) not null, -- {"en": "Department", "ru": "Кафедра"}
+    name              varchar(255) not null,
     can_have_students bool             default false
 );
 
@@ -110,7 +110,7 @@ create table if not exists student_accounts
 
     status                 training_status not null,
 
-    organizational_unit_id uuid            not null references organizational_units (id), -- Привязка к организации, например к Department
+    organizational_unit_id uuid            not null references organizational_units (id),
 
     enrolled_at            timestamp with time zone default null,
     graduated_at           timestamp with time zone default null
@@ -129,28 +129,28 @@ create table if not exists educational_programs
     id                     uuid primary key,
     name                   varchar(255) not null,
     code                   varchar(50)  not null,
-    degree                 degree       not null, -- bachelor, master и т.д.
+    degree                 degree       not null, -- bachelor, master...
 
-    -- Программа привязана к организационной единице
+
     organizational_unit_id uuid references organizational_units (id),
 
-    -- Учебный план
-    duration_years         integer,               -- 4 года, 2 года и т.д.
-    total_credits          integer,               -- 240 ECTS, 120 кредитов и т.д.
+
+    duration_years         integer,
+    total_credits          integer,               -- 240 ECTS, 120 cr
     description            text
 );
 
 
--- курс, например "физика"
+
 create table if not exists courses
 (
     id       uuid primary key,
     name     varchar(255) not null,
-    code     varchar(50),   -- "CS101", "PHY-201" и т.д.
+    code     varchar(50),   -- "CS101", "PHY-201"
 
-    -- Часть программы
-    semester integer,       -- 1-й семестр, 2-й семестр
-    credits  decimal(4, 1), -- 3.0, 4.5 кредита
+
+    semester integer,
+    credits  decimal(4, 1),
 
     audience varchar(15)
 );
@@ -161,9 +161,9 @@ create table if not exists program_courses
     program_id       uuid not null references educational_programs (id) on delete cascade,
     course_id        uuid not null references courses (id) on delete cascade,
 
-    is_compulsory    bool             DEFAULT false, -- обязательный / по выбору
-    credits_override decimal(4, 1),                  -- если кредиты отличаются от базовых в course
-    recommended_year smallint,                       -- 1-й курс, 2-й и т.д.
+    is_compulsory    bool             DEFAULT false,
+    credits_override decimal(4, 1),
+    recommended_year smallint,
 
     created_at       timestamptz      DEFAULT now(),
     created_by       uuid REFERENCES users (id),
@@ -186,21 +186,21 @@ create table if not exists lesson_series
     teacher_id        uuid references staff (id),
     lesson_type       lesson_type not null,
     classroom         varchar(50),
-    topic_pattern     varchar(255),                   -- шаблон темы, можно с плейсхолдерами
-    materials_pattern jsonb,                          -- общие материалы
+    topic_pattern     varchar(255),
+    materials_pattern jsonb,
 
-    -- Расписание
+
     term_id           uuid        not null references academic_terms (id),
     weekday           smallint    not null,           -- 0 = Sunday, 1 = Monday, ..., 6 = Saturday
     start_time        time        not null,           -- 10:00:00
     duration_minutes  integer     not null default 90,
-    interval_weeks    smallint             default 1, -- 1 = каждую неделю, 2 = через неделю
+    interval_weeks    smallint             default 1, -- 1 = every week, 2 = week later
 
-    -- Границы
-    first_lesson_date date        not null,           -- дата первого занятия
-    last_lesson_date  date,                           -- может быть NULL = до конца семестра
 
-    -- Дополнительно
+    first_lesson_date date        not null,
+    last_lesson_date  date,
+
+
     created_at        timestamptz          default now(),
     created_by        uuid references staff (id),
     is_active         bool                 default true
@@ -212,20 +212,19 @@ create table if not exists lessons
     id                    uuid primary key,
     course_id             uuid references courses (id),
 
-    -- Когда и где
+
     scheduled_at          timestamptz not null,
     duration_minutes      integer     not null,
     classroom             varchar(50),
 
-    -- Кто ведет
+
     teacher_id            uuid references staff (id),
 
-    -- Тема занятия
-    topic                 varchar(255),
-    materials             jsonb,       -- ссылки на материалы
 
-    -- Тип урока
-    lesson_type           lesson_type, -- lecture, seminar и т.д.
+    topic                 varchar(255),
+    materials             jsonb,
+
+    lesson_type           lesson_type,
 
     series_id             uuid        references lesson_series (id) on delete set null,
     is_cancelled          bool default false,
