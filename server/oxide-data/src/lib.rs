@@ -1,6 +1,4 @@
-use std::sync::Arc;
 use oxide_domain::error::DomainError;
-use oxide_domain::event::EventPublisher;
 use oxide_domain::user::event::UserEvent;
 
 pub mod error;

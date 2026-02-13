@@ -1,6 +1,5 @@
 mod object;
 
-use uuid::Uuid;
 use crate::chat::object::{ChatId, ChatMemberId, MemberId};
 
 pub struct Chat {

@@ -1,4 +1,3 @@
-use std::env;
 use std::sync::Arc;
 use sqlx::PgPool;
 use oxide_data::PostgresContext;

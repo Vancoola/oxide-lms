@@ -1,5 +1,4 @@
 use thiserror::Error;
-use oxide_domain::error::DomainError;
 
 #[derive(Error, Debug)]
 pub enum AppError {

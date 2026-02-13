@@ -1,7 +1,6 @@
 use std::sync::Arc;
 use async_trait::async_trait;
 use tracing::debug;
-use uuid::Uuid;
 use oxide_domain::error::DomainError;
 use oxide_domain::event::{EventHandler, GlobalEvent};
 use oxide_domain::profile::repository::ProfileRepository;
@@ -24,7 +23,7 @@ impl EventHandler for ProfileHandler {
         match event {
             GlobalEvent::User(u) => {
                 match u {
-                    UserEvent::Created { user_id, email } => {
+                    UserEvent::Created { user_id, email: _ } => {
                         create_profile(self.profile_repository.as_ref(), *user_id).await?;
                         debug!("Profile Created: {:?}", user_id);
                         Ok(())
