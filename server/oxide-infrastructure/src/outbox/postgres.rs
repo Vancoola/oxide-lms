@@ -36,7 +36,7 @@ async fn listen(event_bus: Arc<dyn EventPublisher>, pool: PgPool) -> Result<(), 
     listener.listen("outbox_event").await?;
 
     while let Some(notification) = listener.try_recv().await? {
-
+        //TODO:Remove payload from notification. use notification as a ping signal for SELECT
         match serde_json::from_str::<GlobalEvent>(notification.payload()) {
             Ok(event) => {
                 debug!("Received event: {:?}", event);

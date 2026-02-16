@@ -1,5 +1,5 @@
 <div align="center">
-
+  <img src="/logo.png" width="150" alt="Oxide Logo">
   <h1>Oxide LMS🦀</h1>
   <p><b>A high-performance, modular Learning Management System powered by Rust and WebAssembly.</b></p>
 
