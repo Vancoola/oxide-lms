@@ -28,6 +28,7 @@ impl EventHandler for ProfileHandler {
                         debug!("Profile Created: {:?}", user_id);
                         Ok(())
                     }
+                    _ => Ok(())
                 }
             }
             _ => Ok(())

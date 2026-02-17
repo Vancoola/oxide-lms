@@ -5,7 +5,7 @@ pub mod repository;
 
 use crate::crypto::PasswordHasher;
 use crate::user::event::UserEvent;
-use crate::user::event::UserEvent::Created;
+use crate::user::event::UserEvent::{AuthTry, Created};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use crate::user::object::{Email, Password, RawPassword, UserId};
@@ -68,7 +68,11 @@ impl User {
         std::mem::take(&mut self.events)
     }
 
-    pub fn check_password<H: PasswordHasher>(&self, plain: &RawPassword, hasher: &H) -> bool {
+    pub fn check_password(&mut self, plain: &RawPassword, hasher: &dyn PasswordHasher) -> bool {
+        self.events.push(AuthTry {
+            user_id: *self.id.as_ref(),
+            email: self.email.as_str().into(),
+        });
         self.password_hash.verify(plain, hasher)
     }
 }

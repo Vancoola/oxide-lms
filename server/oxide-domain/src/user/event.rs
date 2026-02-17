@@ -6,5 +6,9 @@ pub enum UserEvent {
     Created {
         user_id: Uuid,
         email: String,
+    },
+    AuthTry {
+        user_id: Uuid,
+        email: String,
     }
 }

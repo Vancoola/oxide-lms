@@ -65,6 +65,20 @@ pub async fn register_admin(
 }
 
 
+pub async fn try_auth(
+    repo: &dyn UserRepository,
+    hasher: &dyn PasswordHasher,
+    email: Email,
+    password: RawPassword,
+) -> Result<User, DomainError> {
+    let mut user = repo.get_user_by_email(&email).await?;
+    if !user.check_password(&password, hasher){
+        return Err(DomainError::InvalidPassword);
+    }
+    Ok(user)
+}
+
+
 
 // #[cfg(test)]
 // mod test {

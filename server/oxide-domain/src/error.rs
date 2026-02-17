@@ -13,5 +13,7 @@ pub enum DomainError {
     #[error("Already activate")]
     AlreadyActivated,
     #[error("Publish error: {0}")]
-    PublishError(String)
+    PublishError(String),
+    #[error("Invalid password")]
+    InvalidPassword,
 }

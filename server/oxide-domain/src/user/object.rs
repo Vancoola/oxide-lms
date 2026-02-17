@@ -82,7 +82,7 @@ impl Password {
         Self(password)
     }
 
-    pub fn verify<H: PasswordHasher>(&self, plain: &RawPassword, hasher: &H) -> bool {
+    pub fn verify(&self, plain: &RawPassword, hasher: &dyn PasswordHasher) -> bool {
         hasher.verify(plain, self).unwrap_or(false)
     }
     pub fn as_str(&self) -> &str {

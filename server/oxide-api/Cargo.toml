@@ -23,9 +23,9 @@ validator.workspace = true
 utoipa.workspace = true
 utoipa-swagger-ui.workspace = true
 
-oxide-data = {path="../oxide-data"}
-oxide-business = {path = "../oxide-business"}
-oxide-shared-types = {path = "../../oxide-shared-types"}
-oxide-domain = {path = "../oxide-domain"}
-oxide-infrastructure = {path = "../oxide-infrastructure"}
+oxide-data = { path = "../oxide-data" }
+oxide-business = { path = "../oxide-business" }
+oxide-shared-types = { path = "../../oxide-shared-types", features = ["full"] }
+oxide-domain = { path = "../oxide-domain" }
+oxide-infrastructure = { path = "../oxide-infrastructure" }
 uuid = { version = "1.20.0", features = ["v4"] }

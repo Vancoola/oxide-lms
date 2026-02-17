@@ -7,3 +7,10 @@ license.workspace = true
 
 [dependencies]
 serde.workspace = true
+validator.workspace = true
+
+utoipa = { workspace = true, optional = true }
+
+[features]
+default = []
+full = ["utoipa"]
