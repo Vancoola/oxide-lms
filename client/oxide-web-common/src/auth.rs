@@ -26,7 +26,7 @@ pub fn AuthProvider(children: ChildrenFn) -> impl IntoView {
     view! {
         {move || {
             match user_resource.get() {
-                None => view! { <p>"Загрузка..."</p> }.into_any(),
+                None => view! { <p>"Loading..."</p> }.into_any(),
                 Some(Err(_)) => {
                     if location.pathname.get() != "/login" {
                         navigate("/login", Default::default());

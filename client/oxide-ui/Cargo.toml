@@ -10,8 +10,13 @@ leptos.workspace = true
 leptos_i18n.workspace = true
 leptos_router.workspace = true
 
+serde_json.workspace = true
+reqwasm.workspace = true
+
 oxide-web-common = {path = "../oxide-web-common"}
 oxide-i18n = {path = "../oxide-i18n"}
+
+oxide-shared-types = { path = "../../oxide-shared-types", features = ["default"] }
 
 [build-dependencies]
 leptos_i18n_build.workspace = true

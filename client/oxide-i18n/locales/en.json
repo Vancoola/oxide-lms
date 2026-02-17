@@ -50,5 +50,10 @@
     "students": "Students",
     "disciplines": "Disciplines",
     "recent_changes": "Recent changes",
-    "home": "Home"
+    "home": "Home",
+    "page_not_found": "Page not found",
+    "not_found_error": "Unfortunately, the requested page does not exist or has been moved",
+    "contact_support": "If the problem persists, contact",
+    "customer_support": "customer support",
+    "go_back": "Go back"
 }

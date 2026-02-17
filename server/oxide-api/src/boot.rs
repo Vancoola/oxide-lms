@@ -16,6 +16,7 @@ pub async fn create_app(app_state: Arc<AppState>) -> anyhow::Result<()> {
         .allow_origin(AllowOrigin::list([
             "http://localhost:8080".parse()?,
             "http://127.0.0.1:8080".parse()?,
+            "http://127.0.0.1:8085".parse()?,
         ]))
         .allow_methods(AllowMethods::list([
             Method::GET,
