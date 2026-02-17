@@ -3,6 +3,7 @@ use axum::Json;
 use axum::response::{IntoResponse, Response};
 use thiserror::Error;
 use oxide_domain::error::DomainError;
+use oxide_infrastructure::error::InfrastructureError;
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -14,6 +15,8 @@ pub enum AppError {
     Internal(#[from] anyhow::Error),
     #[error("Domain error")]
     Domain(#[from] DomainError),
+    #[error("Infrastructure error")]
+    Infrastructure(#[from] InfrastructureError),
 }
 
 impl IntoResponse for AppError {
@@ -23,6 +26,7 @@ impl IntoResponse for AppError {
             AppError::StrError(_) => (StatusCode::INTERNAL_SERVER_ERROR, String::from("Internal Server Error")),
             AppError::Internal(_) => (StatusCode::INTERNAL_SERVER_ERROR, String::from("Internal Server Error")),
             AppError::Domain(e) => (StatusCode::INTERNAL_SERVER_ERROR, format!("{}", e)),
+            AppError::Infrastructure(_) => (StatusCode::INTERNAL_SERVER_ERROR, String::from("Internal Server Error")),
         };
         (status, Json(serde_json::json!({"error": message}))).into_response()
     }

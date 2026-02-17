@@ -12,6 +12,7 @@ use oxide_shared_types::auth::{AuthRequest, JwtToken};
 use crate::AppState;
 use crate::error::AppError;
 use axum::debug_handler;
+use oxide_infrastructure::jwt::generate_jwt;
 
 pub fn auth_router() -> Router<Arc<AppState>>{
     Router::new().route("/login", post(login))
@@ -39,5 +40,9 @@ pub async fn login(State(state): State<Arc<AppState>>, Json(payload): Json<AuthR
     let password = RawPassword::new(payload.password.clone())?;
     //TODO: make a more precise definition of httpstatuscode for errors
     let user = try_auth(state.user_repo.as_ref(), state.password_hasher.as_ref(), email, password).await?;
-    Ok((StatusCode::OK, Json(JwtToken{token: user.email.as_str().to_string()})).into_response())
+
+    //TODO: Make a secret transfer
+    let token = generate_jwt(user.id, "secret")?;
+
+    Ok((StatusCode::OK, Json(JwtToken{token})).into_response())
 }
