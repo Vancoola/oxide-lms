@@ -6,7 +6,7 @@ use crate::user::object::Email;
 
 #[cfg_attr(test, mockall::automock)]
 #[async_trait]
-pub trait UserRepository {
+pub trait UserRepository: Send + Sync {
     async fn get_user_by_id(&self, id: Uuid) -> Result<User, DomainError>;
     async fn get_user_by_email(&self, email: &Email) -> Result<User, DomainError>;
     async fn exists_by_email(&self, email: &Email) -> Result<bool, DomainError>;

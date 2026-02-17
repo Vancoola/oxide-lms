@@ -9,11 +9,9 @@ use oxide_infrastructure::auth::argon2::Argon2Hasher;
 use crate::error::AppError;
 
 pub struct AppState {
-    pub user_repo: Arc<dyn UserRepository + Sync + Send>,
-    pub profile_repo: Arc<dyn ProfileRepository + Sync + Send>,
-
-    pub password_hasher: Arc<dyn PasswordHasher + Sync + Send>,
-
+    pub user_repo: Arc<dyn UserRepository>,
+    pub profile_repo: Arc<dyn ProfileRepository>,
+    pub password_hasher: Arc<dyn PasswordHasher>,
     pub user_extension_registry: Arc<UserExtensionRegistry>,
 }
 
