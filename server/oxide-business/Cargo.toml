@@ -20,7 +20,7 @@ async-trait.workspace = true
 
 tracing.workspace = true
 
-oxide-domain = {path = "../oxide-domain"}
+oxide-domain = { path = "../oxide-domain", features = ["full"] }
 
 [dev-dependencies]
 tokio.workspace = true

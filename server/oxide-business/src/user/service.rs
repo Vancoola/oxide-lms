@@ -80,70 +80,74 @@ pub async fn try_auth(
 
 
 
-// #[cfg(test)]
-// mod test {
-//     use rstest::rstest;
-//     use oxide_domain::crypto::MockPasswordHasher;
-//     use crate::user::repository::MockUserRepository;
-//     use super::*;
-// 
-//     #[rstest]
-//     #[case("true@example.com", "mysecretpassword")]
-//     #[tokio::test]
-//     async fn register_user_valid_input_successfully(#[case] input_email: String, #[case] input_password: String) {
-// 
-//         let email = Email::new(input_email.clone()).unwrap();
-//         let password = RawPassword::new(input_password.clone()).unwrap();
-// 
-//         let mut mock_repo = MockUserRepository::new();
-//         let email_clone = input_email.clone();
-//         let password_clone = input_password.clone();
-//         mock_repo.expect_exists_by_email()
-//             .withf(move |email| email == input_email)
-//             .times(1)
-//             .returning(move |_| Ok(false));
-//         mock_repo.expect_create_user_and_publish()
-//             .withf(move |u| {
-//                 (u.email.as_str() == email_clone)
-//                     & (u.password_hash.as_str() != password_clone)
-//                     & (u.is_admin == false)
-//             })
-//             .times(1)
-//             .returning(|_| Ok(()));
-// 
-//         let mut mock_hasher = MockPasswordHasher::new();
-//         mock_hasher
-//             .expect_hash()
-//             .withf(move |rp| rp.as_str() == input_password)
-//             .returning(|_| Ok("hashed".to_string()));
-// 
-//         let result = register_user(&mock_repo, &mock_hasher, email, password).await;
-//         assert!(result.is_ok());
-//     }
-// 
-//     #[rstest]
-//     #[case("true@example.com", "mysecretpassword")]
-//     #[tokio::test]
-//     async fn register_user_valid_input_error_email_exists(#[case] input_email: String, #[case] input_password: String) {
-// 
-//         let email = Email::new(input_email.clone()).unwrap();
-//         let password = RawPassword::new(input_password.clone()).unwrap();
-// 
-//         let mut mock_repo = MockUserRepository::new();
-//         mock_repo.expect_exists_by_email()
-//             .withf(move |email| email == input_email)
-//             .times(1)
-//             .returning(move |_| Ok(true));
-// 
-//         let mut mock_hasher = MockPasswordHasher::new();
-//         mock_hasher
-//             .expect_hash()
-//             .withf(move |rp| rp.as_str() == input_password)
-//             .returning(|_| Ok("hashed".to_string()));
-// 
-//         let result = register_user(&mock_repo, &mock_hasher, email, password).await;
-//         assert!(result.is_err());
-//         assert_eq!(result.err().unwrap(), DomainError::AlreadyExists);
-//     }
-// 
-// }
+#[cfg(test)]
+mod test {
+    use rstest::rstest;
+    use oxide_domain::crypto::MockPasswordHasher;
+    use oxide_domain::user::repository::MockUserRepository;
+    use super::*;
+
+    #[rstest]
+    #[case("true@example.com", "mysecretpassword")]
+    #[tokio::test]
+    async fn register_user_valid_input_successfully(#[case] input_email: String, #[case] input_password: String) {
+
+        let email = Email::new(input_email.clone()).unwrap();
+        let password = RawPassword::new(input_password.clone()).unwrap();
+
+        let mut mock_repo = MockUserRepository::new();
+        let email_clone = input_email.clone();
+        let password_clone = input_password.clone();
+        mock_repo.expect_exists_by_email()
+            .withf(move |email: &Email | email.as_str() == input_email)
+            .times(1)
+            .returning(move |_| Ok(false));
+        mock_repo.expect_create_user_and_publish()
+            .withf(move |u| {
+                (u.email.as_str() == email_clone)
+                    & (u.password_hash.as_str() != password_clone)
+                    & (u.is_admin == false)
+            })
+            .times(1)
+            .returning(|_| Ok(()));
+
+        let mut mock_hasher = MockPasswordHasher::new();
+        mock_hasher
+            .expect_hash()
+            .withf(move |rp: &RawPassword| rp.as_str() == input_password)
+            .returning(|_| Ok("hashed".to_string()));
+
+        let plugins = UserExtensionRegistry::default();
+
+        let result = register_user(&mock_repo, &mock_hasher, &plugins, email, password).await;
+        assert!(result.is_ok());
+    }
+
+    #[rstest]
+    #[case("true@example.com", "mysecretpassword")]
+    #[tokio::test]
+    async fn register_user_valid_input_error_email_exists(#[case] input_email: String, #[case] input_password: String) {
+
+        let email = Email::new(input_email.clone()).unwrap();
+        let password = RawPassword::new(input_password.clone()).unwrap();
+
+        let mut mock_repo = MockUserRepository::new();
+        mock_repo.expect_exists_by_email()
+            .withf(move |email: &Email| email.as_str() == input_email)
+            .times(1)
+            .returning(move |_| Ok(true));
+
+        let mut mock_hasher = MockPasswordHasher::new();
+        mock_hasher
+            .expect_hash()
+            .withf(move |rp: &RawPassword| rp.as_str() == input_password)
+            .returning(|_| Ok("hashed".to_string()));
+
+        let plugins = UserExtensionRegistry::default();
+
+        let result = register_user(&mock_repo, &mock_hasher, &plugins, email, password).await;
+        assert!(result.is_err());
+        assert_eq!(result.err().unwrap(), DomainError::AlreadyExists);
+    }
+
+}

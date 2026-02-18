@@ -77,34 +77,38 @@ impl User {
     }
 }
 
-// #[cfg(test)]
-// mod test {
-//     use rstest::rstest;
-//     use super::*;
-//
-//     // #[rstest]
-//     // #[case("true@example.com", "secretpassword")]
-//     // fn create_user(#[case] email: String, #[case] password: String) {
-//     //     let user = User::new(email.clone(), password.clone());
-//     //     assert!(user.is_ok());
-//     //     let mut user = user.unwrap();
-//     //     assert_eq!(user.email.0, email);
-//     //     assert!(&!user.is_admin);
-//     //
-//     //     let has_created_event = user.pull_events().iter().any(|e| matches!(e, Created {..}));
-//     //     assert!(has_created_event);
-//     //
-//     // }
-//     //
-//     // #[rstest]
-//     // #[case("true@example.com", "secretpassword")]
-//     // fn crate_admin(#[case] email: String, #[case] password: String) {
-//     //     let user = User::new_admin(email.clone(), password.clone());
-//     //     assert!(user.is_ok());
-//     //     let user = user.unwrap();
-//     //     assert_eq!(user.email.0, email);
-//     //     assert!(user.is_admin);
-//     // }
-//
-//
-// }
+#[cfg(test)]
+mod test {
+    use rstest::rstest;
+    use super::*;
+
+    #[rstest]
+    #[case("true@example.com", "secretpassword")]
+    fn create_user(#[case] email: String, #[case] password: String) {
+        let email_vo = Email::new(email.clone()).unwrap();
+        let password_vo = Password::from_hash(password);
+        let user = User::new(email_vo, password_vo);
+        let mut user = user;
+        assert_eq!(user.email.as_str(), email);
+        assert!(&!user.is_admin);
+
+        let has_created_event = user.pull_events().iter().any(|e| matches!(e, Created {..}));
+        assert!(has_created_event);
+
+    }
+
+    #[rstest]
+    #[case("true@example.com", "secretpassword")]
+    fn crate_admin(#[case] email: String, #[case] password: String) {
+        let email_vo = Email::new(email.clone()).unwrap();
+        let password_vo = Password::from_hash(password);
+        let user = User::new_admin(email_vo, password_vo);
+        let mut user = user;
+        assert_eq!(user.email.as_str(), email);
+        assert!(&user.is_admin);
+        let has_created_event = user.pull_events().iter().any(|e| matches!(e, Created {..}));
+        assert!(has_created_event);
+    }
+
+
+}

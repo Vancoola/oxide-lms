@@ -19,6 +19,14 @@ email_address.workspace = true
 zeroize.workspace = true
 oxide-macros = {path = "../oxide-macros", features = ["zeroize"]}
 
+mockall = { workspace = true, optional = true }
+rstest = { workspace = true, optional = true }
+
+[features]
+default = []
+test-util = ["mockall", "rstest"]
+full = ["test-util"]
+
 [dev-dependencies]
 mockall.workspace = true
 rstest.workspace = true
