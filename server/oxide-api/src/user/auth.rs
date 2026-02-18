@@ -12,6 +12,9 @@ use oxide_shared_types::auth::{AuthRequest, JwtToken};
 use crate::AppState;
 use crate::error::AppError;
 use axum::debug_handler;
+use axum_extra::extract::cookie::{Cookie, SameSite};
+use axum_extra::extract::CookieJar;
+use time::{Duration, OffsetDateTime};
 use oxide_infrastructure::jwt::generate_jwt;
 
 pub fn auth_router() -> Router<Arc<AppState>>{
@@ -32,7 +35,9 @@ pub fn auth_router() -> Router<Arc<AppState>>{
     description = "Logs in a user by verifying credentials and returns an access token. \
                  Requires valid email and password."
 )]
-pub async fn login(State(state): State<Arc<AppState>>, Json(payload): Json<AuthRequest>) -> Result<Response, AppError> {
+pub async fn login(jar: CookieJar,
+                   State(state): State<Arc<AppState>>,
+                   Json(payload): Json<AuthRequest>) -> Result<Response, AppError> {
 
     payload.validate().map_err(|e| AppError::Internal(e.into()))?;
 
@@ -44,5 +49,16 @@ pub async fn login(State(state): State<Arc<AppState>>, Json(payload): Json<AuthR
     //TODO: Make a secret transfer
     let token = generate_jwt(user.id, "secret")?;
 
-    Ok((StatusCode::OK, Json(JwtToken{token})).into_response())
+    let cookie = Cookie::build(("access_lms_token", token.clone()))
+        .path("/")
+        .http_only(true)
+        .same_site(SameSite::Strict)
+        .secure(true)
+        .expires(OffsetDateTime::now_utc() + Duration::days(5))
+        .build();
+
+    Ok((
+        StatusCode::OK,
+        jar.add(cookie),
+        Json(JwtToken{token})).into_response())
 }
