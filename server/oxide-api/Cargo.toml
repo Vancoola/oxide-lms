@@ -26,6 +26,7 @@ validator.workspace = true
 utoipa.workspace = true
 utoipa-swagger-ui.workspace = true
 
+oxide-config = { path = "../oxide-config" }
 oxide-data = { path = "../oxide-data" }
 oxide-business = { path = "../oxide-business" }
 oxide-shared-types = { path = "../../oxide-shared-types", features = ["full"] }

@@ -7,9 +7,12 @@ use leptos_router::hooks::use_navigate;
 use reqwasm::http::RequestCredentials;
 use oxide_i18n::oxide_i18n::i18n::use_i18n;
 use oxide_shared_types::auth::{AuthRequest};
+use oxide_web_common::auth::AuthContext;
 
 #[component]
 pub fn Login() -> impl IntoView {
+
+    let auth = use_context::<AuthContext>().expect("AuthContext missing");
 
     let email_ref: NodeRef<html::Input> = NodeRef::new();
     let password_ref: NodeRef<html::Input> = NodeRef::new();
@@ -23,8 +26,10 @@ pub fn Login() -> impl IntoView {
             password: password_ref.get().unwrap().value(),
         };
         spawn_local(async move {
-            let _ = login_req(request).await;
-            navigate("/", Default::default());
+            let r = login_req(request).await;
+            if r.is_ok() {
+                auth.resource.refetch();
+            }
         });
     };
 
@@ -108,16 +113,15 @@ pub fn Login() -> impl IntoView {
 async fn login_req(request: AuthRequest) -> Result<(), String> {
     let body_json = serde_json::to_string(&request)
         .map_err(|e| format!("Failed to serialize request: {}", e))?;
-    let res = reqwasm::http::Request::post("http://localhost:3000/api/v1/auth/login")
+    let response = reqwasm::http::Request::post("http://localhost:3000/api/v1/auth/login")
         .header("Content-Type", "application/json")
         .body(body_json)
         .credentials(RequestCredentials::Include)
         .send()
         .await
-        .map_err(|e| e.to_string())?
-        .ok();
-    if res == false {
-        return Err(String::from("Login failed"));
+        .map_err(|e| e.to_string())?;
+    if !response.ok() {
+        return Err("Login failed".to_string());
     }
     Ok(())
 }

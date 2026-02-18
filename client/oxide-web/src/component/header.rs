@@ -45,17 +45,17 @@ pub fn Header() -> impl IntoView {
                         <div class="flex items-center space-x-3">
                             <div class="relative">
                                 <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                    {move || auth.user.get().first_name.chars().next()}{move || auth.user.get().last_name.chars().next()}
+                                    //TODO: {move || auth.user.get().first_name.chars().next()}{move || auth.user.get().last_name.chars().next()}
                                 </div>
                                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                             </div>
 
                             <div class="hidden md:block">
                                 <div class="text-sm font-medium text-gray-900">
-                                    {move || auth.user.get().first_name}" "{move || auth.user.get().last_name}
+                                    //TODO: {move || auth.user.get().first_name}" "{move || auth.user.get().last_name}
                                 </div>
                                 <div class="text-xs text-gray-500">
-                                    {t!(i18n, group)}": "{move || auth.user.get().group_code}
+                                    //TODO: {t!(i18n, group)}": "{move || auth.user.get().group_code}
                                 </div>
                             </div>
 

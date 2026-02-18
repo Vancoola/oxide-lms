@@ -1,4 +1,3 @@
-use std::os::linux::raw::stat;
 use std::sync::Arc;
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -10,7 +9,7 @@ use oxide_business::user::service::try_auth;
 use oxide_domain::user::object::{Email, RawPassword};
 use oxide_shared_types::auth::{AuthRequest, JwtToken};
 use crate::AppState;
-use crate::error::AppError;
+use crate::error::{ApiError, AppError};
 use axum::debug_handler;
 use axum_extra::extract::cookie::{Cookie, SameSite};
 use axum_extra::extract::CookieJar;
@@ -37,22 +36,21 @@ pub fn auth_router() -> Router<Arc<AppState>>{
 )]
 pub async fn login(jar: CookieJar,
                    State(state): State<Arc<AppState>>,
-                   Json(payload): Json<AuthRequest>) -> Result<Response, AppError> {
+                   Json(payload): Json<AuthRequest>) -> Result<Response, ApiError> {
 
-    payload.validate().map_err(|e| AppError::Internal(e.into()))?;
+    payload.validate().map_err(|e| ApiError::BadRequest(e.to_string()))?;
 
-    let email = Email::new(payload.email.clone())?;
-    let password = RawPassword::new(payload.password.clone())?;
-    //TODO: make a more precise definition of httpstatuscode for errors
-    let user = try_auth(state.user_repo.as_ref(), state.password_hasher.as_ref(), email, password).await?;
+    let email = Email::new(payload.email.clone()).map_err(|e| ApiError::BadRequest(e.to_string()))?;
+    let password = RawPassword::new(payload.password.clone()).map_err(|e| ApiError::BadRequest(e.to_string()))?;
 
-    //TODO: Make a secret transfer
-    let token = generate_jwt(user.id, "secret")?;
+    let user = try_auth(state.user_repo.as_ref(), state.password_hasher.as_ref(), email, password).await.map_err(|e| ApiError::Unauthorized(e.to_string()))?;
+
+    let token = generate_jwt(user.id, state.config.jwt.secret.as_str()).map_err(|e| ApiError::InternalServerError(e.to_string()))?;
 
     let cookie = Cookie::build(("access_lms_token", token.clone()))
         .path("/")
         .http_only(true)
-        .same_site(SameSite::Strict)
+        .same_site(SameSite::None) //For dev
         .secure(true)
         .expires(OffsetDateTime::now_utc() + Duration::days(5))
         .build();

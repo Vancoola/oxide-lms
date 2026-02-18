@@ -16,3 +16,4 @@ serde.workspace = true
 oxide-web-common = {path = "../oxide-web-common"}
 oxide-ui = {path = "../oxide-ui"}
 oxide-i18n = {path = "../oxide-i18n"}
+console_error_panic_hook = "0.1.7"

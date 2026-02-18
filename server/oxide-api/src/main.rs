@@ -11,9 +11,11 @@ use oxide_business::user::service::register_admin;
 use oxide_domain::user::object::{Email, RawPassword};
 use sqlx::PgPool;
 use std::env;
+use std::str::FromStr;
 use std::sync::Arc;
-use tracing::{info, warn};
+use tracing::{info, warn, Level};
 use oxide_business::profile::handler::ProfileHandler;
+use oxide_config::{load_config, AppConfig};
 use oxide_domain::event::EventHandler;
 use oxide_infrastructure::outbox::OutboxWatcher;
 use oxide_infrastructure::outbox::postgres::PostgresOutboxWatcher;
@@ -23,39 +25,25 @@ use crate::state::AppState;
 
 #[tokio::main]
 async fn main() -> Result<(), AppError> {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::DEBUG)
-        .init();
-    log_startup_banner();
+
     dotenv().ok();
     info!("Environment value have been set");
+    let app_config = Arc::new(load_config());
 
-    let (tokio_event_bus, rec) = TokyoEventBus::new();
-    let tokio_event_bus = Arc::new(tokio_event_bus);
-    let connection_string =
-        env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env or system env");
-    let pg_pool = PgPool::connect(connection_string.as_str()).await?;
 
-    let postgres_outbox = PostgresOutboxWatcher::new(pg_pool.clone(), tokio_event_bus.clone());
+    tracing_subscriber::fmt()
+        .with_max_level(Level::from_str(&app_config.server.tracing_level).unwrap_or(Level::INFO))
+        .init();
+    log_startup_banner();
 
-    let app_state = Arc::new(AppState::new(pg_pool.clone()).await?);
+    let app_state = Arc::new(AppState::new(app_config.clone()).await?);
 
-    let mut event_handlers = Vec::<Arc<dyn EventHandler>>::new();
-    event_handlers.push(Arc::new(ProfileHandler::new(app_state.clone().profile_repo.clone())));
-
-    let event_dispatcher = EventDispatcher::new(event_handlers);
-    tokio::spawn(async move {
-        event_dispatcher.run(rec).await;
-    });
-    tokio::spawn(async move {
-        postgres_outbox.watch().await;
-    });
-
-    if let Err(e) = admin_register(app_state.clone()).await {
+    if let Err(e) = admin_register(app_state.clone(), app_config.clone()).await {
         warn!("Failed to register admin: {}", e);
     }
+    create_app(app_state, app_config).await?;
 
-    create_app(app_state).await?;
+
     Ok(())
 }
 
@@ -80,23 +68,15 @@ fn log_startup_banner() {
     info!("--------------------------------------------------");
 }
 
-async fn admin_register(app_state: Arc<AppState>) -> anyhow::Result<()> {
-    let need_reg = env::var("ADMIN_REGISTER").map(|_| true).unwrap_or(false);
+async fn admin_register(app_state: Arc<AppState>, app_config: Arc<AppConfig>) -> anyhow::Result<()> {
+    let need_reg = app_config.admin.register;
 
     if !need_reg {
         info!("The admin will not register");
         return Ok(());
     }
-
-    let env_email = env::var("ADMIN_EMAIL")
-        .ok()
-        .expect("ADMIN_EMAIL must be set in .env or system env");
-    let env_password = env::var("ADMIN_PASSWORD")
-        .ok()
-        .expect("ADMIN_PASSWORD must be set in .env or system env");
-
-    let email = Email::new(env_email)?;
-    let password = RawPassword::new(env_password)?;
+    let email = Email::new(app_config.admin.email.clone())?;
+    let password = RawPassword::new(app_config.admin.password.clone())?;
     register_admin(app_state.user_repo.as_ref(), app_state.password_hasher.as_ref(), app_state.user_extension_registry.as_ref(), email, password).await?;
     info!("The admin has been registered");
     Ok(())

@@ -4,15 +4,16 @@ use std::sync::Arc;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use axum::{Json, Router};
-use axum::extract::{FromRequestParts, Request};
+use axum::extract::{FromRef, FromRequestParts};
 use axum::http::request::Parts;
 use axum::routing::get;
+use axum_extra::extract::CookieJar;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use uuid::Uuid;
 use oxide_infrastructure::jwt::Claims;
 use crate::AppState;
 use crate::dto::user::UserInfo;
-use crate::error::AppError;
+use crate::error::{ApiError};
 
 pub fn user_router() -> Router<Arc<AppState>> {
     Router::new().route("/me", get(me))
@@ -30,9 +31,9 @@ pub fn user_router() -> Router<Arc<AppState>> {
 pub async fn me(auth_user: AuthUser) -> impl IntoResponse {
     (StatusCode::OK, Json(UserInfo{
         id: Uuid::new_v4(),
-        first_name: "Денис".to_string(),
-        last_name: "Суздальцев".to_string(),
-        group_code: "ИТ-21-1".to_string(),
+        first_name: "Firstname".to_string(),
+        last_name: "Lastname".to_string(),
+        group_code: "Group".to_string(),
     }))
 }
 
@@ -40,28 +41,23 @@ pub struct AuthUser(pub Claims);
 impl<S> FromRequestParts<S> for AuthUser
 where
     S: Send + Sync,
+    Arc<AppState>: FromRef<S>,
 {
-    type Rejection = AppError;
+    type Rejection = ApiError;
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        let auth_header = parts
-            .headers
-            .get(axum::http::header::AUTHORIZATION)
-            .and_then(|v| v.to_str().ok())
-            .ok_or(AppError::MissingToken)?;
+        let app_state = Arc::<AppState>::from_ref(state);
+        let jar = CookieJar::from_request_parts(parts, &app_state)
+            .await
+            .map_err(|_| ApiError::Unauthorized("Token is invalid".to_string()))?;
 
-        if !auth_header.starts_with("Bearer") {
-            return Err(AppError::MissingToken)
-        }
+        let token = jar.get("access_lms_token").ok_or(ApiError::Unauthorized("Token not found".to_string()))?;
 
-        let token = &auth_header[7..];
-
-        //Todo: Make a secret transfer
         let token_data = decode::<Claims>(
-            token,
-            &DecodingKey::from_secret("secret".as_ref()),
+            token.value(),
+            &DecodingKey::from_secret(app_state.config.jwt.secret.as_ref()),
             &Validation::default(),
         )
-            .map_err(|_| AppError::MissingToken)?;
+            .map_err(|e| ApiError::BadRequest(e.to_string()))?;
 
         Ok(AuthUser(token_data.claims))
     }

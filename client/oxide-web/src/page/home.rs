@@ -20,7 +20,7 @@ pub fn Home() -> impl IntoView {
                             <h1 class="text-3xl font-bold text-gray-900">{move || t!(i18n, my_training)}</h1>
                             <div class="mt-2">
                                 <p class="text-xl font-semibold text-gray-700">
-                                    {move || t!(i18n, good_morning)}" "{move || auth.user.get().first_name}"! 👋"
+                                    //TODO: {move || t!(i18n, good_morning)}" "{move || auth.user.get().first_name}"! 👋"
                                 </p>
                                 <p class="text-gray-600 mt-1">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">

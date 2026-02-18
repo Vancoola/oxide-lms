@@ -76,7 +76,6 @@ impl UserRepository for PostgresContext {
     }
 
     async fn create_user_and_publish(&self, user: &mut User) -> Result<(), DomainError> {
-        //TODO: The Outbox pattern should be here
         let mut tx = self.pool.begin().await.map_err(to_domain_err)?;
         sqlx::query!(
             r#"INSERT INTO users (id, email, password, is_admin) VALUES ($1, $2, $3, $4)"#,
