@@ -150,31 +150,36 @@ graph LR
         ES[(Elasticsearch)]
     end
 
-    subgraph Server [Backend Engine]
-        api[oxide-api]
-        subgraph IL [Infrastructure Layer]
-            inf[oxide-infrastructure]
-            data[oxide-data]
-        end
-        biz[oxide-business]
-        wasm[oxide-wasm-provider]
-        
-        
-        api --> biz
-        biz --> inf
-        biz --> data
-        biz --> wasm
-        wasm --x plugins{{WASM Plugins}}
+    subgraph Backend [Backend Engine]
+        subgraph Server
+            api[oxide-api]            
+            subgraph IL [Infrastructure Layer]
+                inf[oxide-infrastructure]
+                data[oxide-data]
+            end
+            biz[oxide-business]
+            wasm[oxide-wasm-provider]
 
-        dom[oxide-domain]
-        macros[oxide-macros]
-        
-        dom ==> macros
-        
-        data --> dom
-        inf --> dom
-        biz --> dom
-        wasm --> dom
+            api --> biz
+            biz --> inf
+            biz --> data
+            biz --> wasm
+            wasm --x plugins{{WASM Plugins}}
+
+
+
+            dom[oxide-domain]
+            macros[oxide-macros]
+
+            dom ==> macros
+
+            data --> dom
+            inf --> dom
+            biz --> dom
+            wasm --> dom
+        end
+        cof[oxide-config]
+        Server --> cof
         
     end
     
