@@ -18,7 +18,7 @@ pub fn generate_jwt(user_id: UserId, secret_key: &str) -> Result<String, Infrast
 }
 
 #[derive(Serialize, Deserialize)]
-struct Claims {
+pub struct Claims {
     pub sub: Uuid,
     pub exp: i64,
 }
