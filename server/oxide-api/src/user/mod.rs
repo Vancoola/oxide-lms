@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod admin;
 
 use std::sync::Arc;
 use axum::response::IntoResponse;
@@ -6,7 +7,7 @@ use axum::http::StatusCode;
 use axum::{Json, Router};
 use axum::extract::{FromRef, FromRequestParts};
 use axum::http::request::Parts;
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum_extra::extract::CookieJar;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use uuid::Uuid;
@@ -14,9 +15,13 @@ use oxide_infrastructure::jwt::Claims;
 use crate::AppState;
 use crate::dto::user::UserInfo;
 use crate::error::{ApiError};
+use crate::user::admin::register_user;
 
 pub fn user_router() -> Router<Arc<AppState>> {
     Router::new().route("/me", get(me))
+}
+pub fn admin_router() -> Router<Arc<AppState>> {
+    Router::new().route("/user/register", post(register_user))
 }
 
 #[utoipa::path(

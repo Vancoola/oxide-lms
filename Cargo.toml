@@ -91,8 +91,11 @@ utoipa = { version = "5.4.0", features = ["axum_extras", "uuid"] }
 utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 
 
-wasmtime = "41.0.3"
-wit-bindgen = "0.52.0"
+wasmtime = "42.0.0"
+wit-bindgen = "0.53.1"
+
+outbox-core = { git = "https://github.com/Vancoola/oxide-outbox" }
+outbox-postgres = { git = "https://github.com/Vancoola/oxide-outbox" }
 
 [workspace.lints.clippy]
 pedantic = "warn"

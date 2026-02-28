@@ -4,6 +4,7 @@ use utoipa::{Modify, OpenApi};
 use utoipa::openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme};
 use crate::user::auth::{__path_login};
 use crate::user::{__path_me};
+use crate::user::admin::__path_register_user;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -12,7 +13,8 @@ use crate::user::{__path_me};
     ),
     paths(
         login,
-        me
+        me,
+        register_user
     ),
     components(
         schemas(

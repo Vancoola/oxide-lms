@@ -1,4 +1,4 @@
 [server]
 port = 3000
 host = "0.0.0.0"
-tracing_level = "DEBUG"
+tracing_level = "DEBUG" #INFO WARN ERROR TRACE

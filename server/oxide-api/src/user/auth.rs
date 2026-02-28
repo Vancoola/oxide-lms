@@ -45,7 +45,7 @@ pub async fn login(jar: CookieJar,
 
     let user = try_auth(state.user_repo.as_ref(), state.password_hasher.as_ref(), email, password).await.map_err(|e| ApiError::Unauthorized(e.to_string()))?;
 
-    let token = generate_jwt(user.id, state.config.jwt.secret.as_str()).map_err(|e| ApiError::InternalServerError(e.to_string()))?;
+    let token = generate_jwt(user.id, user.is_admin, state.config.jwt.secret.as_str()).map_err(|e| ApiError::InternalServerError(e.to_string()))?;
 
     let cookie = Cookie::build(("access_lms_token", token.clone()))
         .path("/")

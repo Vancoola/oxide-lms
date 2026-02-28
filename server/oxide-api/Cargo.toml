@@ -26,6 +26,11 @@ validator.workspace = true
 utoipa.workspace = true
 utoipa-swagger-ui.workspace = true
 
+outbox-core.workspace = true
+outbox-postgres.workspace = true
+
+async-trait.workspace = true
+
 oxide-config = { path = "../oxide-config" }
 oxide-data = { path = "../oxide-data" }
 oxide-business = { path = "../oxide-business" }

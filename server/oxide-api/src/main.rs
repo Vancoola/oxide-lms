@@ -13,6 +13,7 @@ use sqlx::PgPool;
 use std::env;
 use std::str::FromStr;
 use std::sync::Arc;
+use tokio::sync::watch;
 use tracing::{info, warn, Level};
 use oxide_business::profile::handler::ProfileHandler;
 use oxide_config::{load_config, AppConfig};
@@ -41,9 +42,12 @@ async fn main() -> Result<(), AppError> {
     if let Err(e) = admin_register(app_state.clone(), app_config.clone()).await {
         warn!("Failed to register admin: {}", e);
     }
-    create_app(app_state, app_config).await?;
 
+    let (shutdown_tx, shutdown_rx) = watch::channel(false);
 
+    create_app(app_state, app_config, shutdown_rx).await?;
+
+    shutdown_tx.send(true).unwrap();
     Ok(())
 }
 

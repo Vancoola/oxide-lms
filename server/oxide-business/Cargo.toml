@@ -21,6 +21,7 @@ async-trait.workspace = true
 tracing.workspace = true
 
 oxide-domain = { path = "../oxide-domain", features = ["full"] }
+outbox-core.workspace = true
 
 [dev-dependencies]
 tokio.workspace = true

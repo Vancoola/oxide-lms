@@ -6,6 +6,7 @@ use oxide_i18n::oxide_i18n::i18n::I18nContextProvider;
 use oxide_ui::page::login::Login;
 use oxide_ui::page::not_found::NotFound;
 use oxide_web_common::auth::AuthProvider;
+use crate::page::home::HomePage;
 
 #[component]
 pub fn AppRouter() -> impl IntoView {
@@ -15,9 +16,11 @@ pub fn AppRouter() -> impl IntoView {
                 <AuthProvider>
                     <I18nContextProvider>
                         <main>
-                            <div class="container mx-auto px-4">
+                            //<div class="container mx-auto px-4">
+                            <div>
                                 <Routes fallback=NotFound>
                                     <Route path=path!("/login") view=Login />
+                                    <Route path=path!("/") view=HomePage />
                                 </Routes>
                             </div>
                         </main>
